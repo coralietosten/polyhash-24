@@ -6,4 +6,7 @@ class Balise:
         self.id = self.nb_balise
         self.coord = coord
 
-        self.nb_balise +=1 #Incrémente de 1 la variable statique (commune à chaque instance)
+        Balise.nb_balise +=1 #Incrémente de 1 la variable statique (commune à chaque instance)
+    
+    def __str__(self):
+        return f"{self.id} ({self.coord.x}, {self.coord.y})"
