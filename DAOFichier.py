@@ -42,7 +42,7 @@ class DAOFichier:
                             ligne_l = list_contenu[l].split(" ") 
                             vent_ligne_l = []
                             for c in range(0, colonnes*2, 2) :
-                                vent_ligne_l.append(Vecteur2(int(ligne_l[c]), int(ligne_l[c+1])))
+                                vent_ligne_l.append(Vecteur2(int(ligne_l[c+1]), int(ligne_l[c])))
                             vent_altitude_a.append(vent_ligne_l)
                         carte_vent.append(vent_altitude_a)
                     
