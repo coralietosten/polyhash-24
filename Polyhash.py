@@ -12,7 +12,7 @@ class Polyhash:
     nombre_cibles: int
     rayon_couverture: int
     ballons: int
-    tours: int
+    nombre_tours: int
     depart: Vecteur2
     cibles: list[Balise]
     carte_vent: CarteVent
@@ -30,3 +30,5 @@ class Polyhash:
 
     def __repr__(self):
         return self.__str__()
+
+
