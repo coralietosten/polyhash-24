@@ -1,4 +1,6 @@
 from Polyhash import *
+from StrategieInterface import StrategieInterface
+from Strategies.StrategieAleatoire import StrategieAleatoire 
 
 class Jeu:
 
@@ -15,9 +17,12 @@ class Jeu:
         pass
 
     def mise_a_jour(self):
+        """Met à jour le score, la liste 'ballons', la liste 'action' et num_tour """
+        
         pass
 
-    def lancement_jeu(self,strategie):
+    def lancement_jeu(self,strategie:StrategieInterface):
+        """Exécute tout le jeu en utilisant la stratégie."""
         pass
     
     
