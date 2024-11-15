@@ -1,6 +1,6 @@
 # PolyHash-24
 
-Ce dépôt correspond au projet informatique de première années de 4 étudiants de Polytech Nantes.
+Ce dépôt correspond au projet informatique de troisième année de 4 étudiants de Polytech Nantes.
 
 
 ## Étudiants : 
