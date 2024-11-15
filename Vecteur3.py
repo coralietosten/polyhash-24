@@ -3,3 +3,6 @@ class Vecteur3:
         self.x = x
         self.y = y
         self.z = z
+
+    def __add__(self,vec3):
+        return Vecteur3(self.x+vec3.x, self.y+vec3.y,self.z+vec3.z)

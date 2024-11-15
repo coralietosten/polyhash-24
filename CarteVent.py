@@ -19,3 +19,6 @@ class CarteVent:
 
     def __repr__(self):
         return self.__str__()
+    
+    def __getitem__(self,index):
+        return self.vents[index]
