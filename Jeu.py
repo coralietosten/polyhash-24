@@ -1,11 +1,13 @@
 from Polyhash import *
+from Ballon import Ballon
+
 from StrategieInterface import StrategieInterface
 from Strategies.StrategieAleatoire import StrategieAleatoire 
 from Vecteur3 import Vecteur3
 class Jeu:
 
     def __init__(self,polyhash):
-        self.polyhash = polyhash
+        self.polyhash : Polyhash = polyhash
         self.ballons = []
         self.carteIdBalises = []
         self.score = 0
@@ -14,7 +16,9 @@ class Jeu:
         self.num_tour = 0
 
     def initialisation(self):
-        pass
+        for _ in range(self.polyhash.ballons):
+            self.ballons.append(Ballon(self.polyhash.depart))
+        #todo : Ajouter la carteIdBalise
 
     def calcul_score_tour(self):
         """calcul le score du tour pour tous les ballons""" 
