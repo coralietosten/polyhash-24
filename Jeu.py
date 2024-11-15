@@ -16,13 +16,13 @@ class Jeu:
         self.num_tour = 0
 
     def initialisation(self):
-        for _ in range(self.polyhash.ballons):
-            self.ballons.append(Ballon(self.polyhash.depart))
+        for _ in range(self.polyhash.nombre_ballons):
+            self.ballons.append(Ballon(Vecteur3(self.polyhash.depart.x,self.polyhash.depart.y,0)))
         #todo : Ajouter la carteIdBalise
 
     def calcul_score_tour(self):
         """calcul le score du tour pour tous les ballons""" 
-        pass
+        return 0
 
     def mise_a_jour(self):
         """Met à jour le score, la liste 'ballons', la liste 'action' et num_tour pour un tour et tous les ballons"""
@@ -31,19 +31,21 @@ class Jeu:
         carte_vent = self.polyhash.carte_vent
         for b in self.ballons :
             #modifications des coordonnées des ballons
-            action_b = self.strategie(b, self.polyhash) #récupère l'altitude où doit aller le ballon
+            action_b = self.strategie.donne_action(b, self.polyhash) #récupère l'altitude où doit aller le ballon
             b.coord += Vecteur3(0,0,action_b) #modification de la coordonnée altitude
-            b.coord += carte_vent[b.coord.z][b.coord.x][b.coord.y] #modification des coordonnées x et y
-            action_tour.append(self.strategie(b,self.polyhash)) #ajout des actions de chaque ballons
+            vent = carte_vent[b.coord.z][b.coord.x][b.coord.y]
+            b.coord += Vecteur3(vent.x,vent.y,0) #modification des coordonnées x et y
+            action_tour.append(action_b) #ajout des actions de chaque ballons
         self.actions.append(action_tour)
-        self.score += calcul_score_tour()
+        self.score += self.calcul_score_tour()
         
 
     def lancement_jeu(self,strategie:StrategieInterface):
         """Exécute tout le jeu en utilisant la stratégie."""
         self.strategie=strategie
         self.initialisation()
-        for i in range(self.polyhash.nombre_tour):
+        strategie.initialisation()
+        for _ in range(self.polyhash.nombre_tours):
             self.mise_a_jour()
 
 
