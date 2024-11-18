@@ -12,8 +12,8 @@ class Polyhash:
     altitudes: int
     nombre_cibles: int
     rayon_couverture: int
-    nombre_tours: int
     nombre_ballons: int
+    nombre_tours: int
     depart: Vecteur2
     cibles: list[Balise]
     carte_vent: CarteVent
