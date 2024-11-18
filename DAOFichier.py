@@ -26,13 +26,13 @@ class DAOFichier:
 
                     # Ligne 3
                     ligne_3 = list_contenu[2].split(" ")
-                    depart = Vecteur2(ligne_3[0], ligne_3[1])
+                    depart = Vecteur2(ligne_3[1], ligne_3[0])
 
                     # A partir de la ligne 4
                     cibles = []
                     for i in range(3, 3 + nombre_cibles)  :
                         ligne_i = list_contenu[i].split(" ")
-                        cibles.append(Balise(Vecteur2(ligne_i[0], ligne_i[1])))
+                        cibles.append(Balise(Vecteur2(ligne_i[1], ligne_i[0])))
 
                     # Vents 
                     carte_vent = []
