@@ -1,9 +1,11 @@
 import sys
 from DAOFichier import DAOFichier
-from CarteIDBalises import CarteIDBalises
-from Polyhash import Polyhash
-
+from Jeu import Jeu
+from Strategies.StrategieAleatoire import StrategieAleatoire
 if __name__ == "__main__":
     DAO = DAOFichier
-    polyhash: Polyhash = DAO.donne_polyhash(sys.argv[1])
-    carteIDBalises = CarteIDBalises(polyhash.cibles, polyhash.lignes, polyhash.colonnes, polyhash.ballons)
+    polyhash = DAO.donne_polyhash("data/a_example.in")
+    jeu = Jeu(polyhash)
+    jeu.lancement_jeu(StrategieAleatoire())
+    print(jeu.actions)
+    print(jeu.score)
