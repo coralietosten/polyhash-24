@@ -25,6 +25,6 @@ class CarteIDBalises:
         cercle = self.coocercle(2)
         for balise in balises :
             for cord in cercle :
-                if int(balise.coord.y) + cord[1] >= 0 and int(balise.coord.y) + cord[1] <  nb_lignes :
-                    carteIDBalises[int(balise.coord.y) + cord[1]][(int(balise.coord.x) + cord[0])%nb_colonnes].append(balise.id)
+                if balise.coord.y + cord[1] >= 0 and balise.coord.y + cord[1] <  nb_lignes :
+                    carteIDBalises[balise.coord.y + cord[1]][(balise.coord.x) + cord[0]%nb_colonnes].append(balise.id)
         return carteIDBalises

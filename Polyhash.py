@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from Balise import Balise
 from Vecteur2 import Vecteur2
 from CarteVent import CarteVent
+from CarteIDBalises import CarteIDBalises
 
 @dataclass
 class Polyhash:
@@ -16,6 +17,11 @@ class Polyhash:
     depart: Vecteur2
     cibles: list[Balise]
     carte_vent: CarteVent
+    carteIDBalises: list
+    
+    def __init__(self) :
+        carteID = CarteIDBalises(self.cibles, self.lignes, self.colonnes, self.rayon_couverture)
+        self.carteIDBalises = carteID.carteBalise
 
     def __str__(self):
         return (
