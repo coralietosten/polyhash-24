@@ -22,10 +22,9 @@ class CarteIDBalises:
         init carteIDBalises 
         """
         carteIDBalises = [[[] for i in range(nb_colonnes)] for j in range(nb_lignes)]
-        cercle = self.coocercle(2)
+        cercle = self.coocercle(rayon)
         for balise in balises :
             for cord in cercle :
                 if balise.coord.y + cord[1] >= 0 and balise.coord.y + cord[1] <  nb_lignes :
-                    print(balise.coord.y + cord[1], (balise.coord.x + cord[0])%nb_colonnes)
                     carteIDBalises[balise.coord.y + cord[1]][(balise.coord.x + cord[0])%nb_colonnes].append(balise.id)
         return carteIDBalises
