@@ -9,20 +9,35 @@ class Jeu:
     def __init__(self,polyhash):
         self.polyhash : Polyhash = polyhash
         self.ballons = []
-        self.carteIdBalises = []
         self.score = 0
         self.actions = []
         self.strategie = None
         self.num_tour = 0
 
     def initialisation(self):
+        """Initialise le jeu afin de commencer de zéro""" 
+        #Rénitialiser les variables
+        self.ballons = []
+        self.score = 0
+        self.actions = []
+        self.num_tour = 0
+        #Ajouter les ballons
         for _ in range(self.polyhash.nombre_ballons):
             self.ballons.append(Ballon(Vecteur3(self.polyhash.depart.x,self.polyhash.depart.y,0)))
-        #todo : Ajouter la carteIdBalise
+
 
     def calcul_score_tour(self):
         """calcul le score du tour pour tous les ballons""" 
-        return 0
+        score = 0
+        baliseTouched = set()
+        for b in self.ballons:
+            if not b.estSortie:
+                lsBalises = self.polyhash.carteIDBalises[b.coord.y][b.coord.x]
+                for idBalise in lsBalises:
+                    if idBalise not in baliseTouched:
+                        baliseTouched.add(idBalise)
+                        score +=1
+        return score
 
     def mise_a_jour(self):
         """Met à jour le score, la liste 'ballons', la liste 'action' et num_tour pour un tour et tous les ballons"""
