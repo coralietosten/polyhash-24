@@ -17,9 +17,10 @@ class Polyhash:
     depart: Vecteur2
     cibles: list[Balise]
     carte_vent: CarteVent
-    carteIDBalises: list
-    
-    def __init__(self) :
+    carteIDBalises: list = None  # Initialisée dans __post_init__
+
+    def __post_init__(self):
+        # Initialisation de `carteIDBalises`
         carteID = CarteIDBalises(self.cibles, self.lignes, self.colonnes, self.rayon_couverture)
         self.carteIDBalises = carteID.carteBalise
 
@@ -27,7 +28,7 @@ class Polyhash:
         return (
             f"Polyhash(\n"
             f"    lignes = {self.lignes}, colonnes = {self.colonnes}, altitudes = {self.altitudes},\n"
-            f"    nombre_cibles = {self.nombre_cibles}, rayon_couverture = {self.rayon_couverture}, ballons = {self.ballons}, tours = {self.tours},\n"
+            f"    nombre_cibles = {self.nombre_cibles}, rayon_couverture = {self.rayon_couverture}, ballons = {self.nombre_ballons}, tours = {self.nombre_tours},\n"
             f"    depart = {self.depart},\n"
             f"    cibles = {self.cibles},\n"
             f"    carte_vent = {self.carte_vent}\n"

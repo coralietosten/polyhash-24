@@ -26,5 +26,6 @@ class CarteIDBalises:
         for balise in balises :
             for cord in cercle :
                 if balise.coord.y + cord[1] >= 0 and balise.coord.y + cord[1] <  nb_lignes :
-                    carteIDBalises[balise.coord.y + cord[1]][(balise.coord.x) + cord[0]%nb_colonnes].append(balise.id)
+                    print(balise.coord.y + cord[1], (balise.coord.x + cord[0])%nb_colonnes)
+                    carteIDBalises[balise.coord.y + cord[1]][(balise.coord.x + cord[0])%nb_colonnes].append(balise.id)
         return carteIDBalises
