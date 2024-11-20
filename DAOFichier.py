@@ -70,3 +70,16 @@ class DAOFichier:
             raise FileNotFoundError(f"Le fichier spécifié '{nom_fichier}' est introuvable.")
         except (ValueError, IndexError) as e:
             raise ValueError(f"Le fichier '{nom_fichier}' contient des données invalides ou mal formatées. Détails : {e}")
+
+    @staticmethod
+    def cree_fichier(list_deplacement: list[list[int]]) -> None:
+        contenu = ""
+        for dep in list_deplacement :
+            ligne = ""
+            for val in dep :
+                ligne += str(val) + " "
+            ligne += "\n"
+            contenu += ligne
+        
+        with open("sortie.txt", 'w') as fichier:
+            fichier.write(contenu)
