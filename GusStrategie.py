@@ -108,7 +108,7 @@ class GusStrategie:
             for b2 in lbalises :
                 if b1.id != b2.id and self.distance(b1.coord,b2.coord) < (dcouverture * 2) - 1 :
                     balisesadjacentes.append(b2)
-            bcentre = self.baricentre(balisesadjacentes)
+            bcentre = self.baricentre(balisesadjacentes + [b1])
             score = len(carteidbalises[bcentre.x][bcentre.y])
             dicobjectif[b1] = (score,bcentre,balisesadjacentes)
         for b in dicobjectif.keys():
