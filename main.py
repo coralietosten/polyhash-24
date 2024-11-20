@@ -2,6 +2,7 @@ import sys
 from DAOFichier import DAOFichier
 from Jeu import Jeu
 from Strategies.StrategieAleatoire import StrategieAleatoire
+from Strategies.GusStrategie import GusStrategie
 from Polyhash import Polyhash
 
 if __name__ == "__main__":
@@ -9,10 +10,21 @@ if __name__ == "__main__":
     polyhash: Polyhash = DAO.donne_polyhash("data/b_small.in")
     # polyhash: Polyhash = DAO.donne_polyhash(sys.argv[1])
     jeu = Jeu(polyhash)
-    max_game = (0,[])
     #Test avec la Stratégie Aléatoire
-    for i in range(100000):
+    max_game = (0,[])
+    for i in range(1000):
         jeu.lancement_jeu(StrategieAleatoire())
         if jeu.score > max_game[0]:
             max_game = (jeu.score,jeu.actions)
-    print(max_game)
+    print("Aléatoire : ",max_game)
+
+    #Test avec la Stratégie Augustin
+    max_game = (0,[])
+    jeu.lancement_jeu(GusStrategie())
+    if jeu.score > max_game[0]:
+        max_game = (jeu.score,jeu.actions)
+    print("Augustin : ",max_game)
+
+
+
+    

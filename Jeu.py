@@ -22,8 +22,9 @@ class Jeu:
         self.actions = []
         self.num_tour = 0
         #Ajouter les ballons
-        for _ in range(self.polyhash.nombre_ballons):
-            self.ballons.append(Ballon(Vecteur3(self.polyhash.depart.x,self.polyhash.depart.y,0)))
+
+        for i in range(self.polyhash.nombre_ballons):
+            self.ballons.append(Ballon(id = i,coord = Vecteur3(self.polyhash.depart.x,self.polyhash.depart.y,0)))
 
 
     def calcul_score_tour(self):
