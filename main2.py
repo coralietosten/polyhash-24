@@ -6,7 +6,7 @@ from Polyhash import Polyhash
 
 import pickle
 
-data_choix = 0
+data_choix = 3
 files = ["a_example","b_small","c_medium","d_final"]
 
 def enregistrer_solution(game):
@@ -24,19 +24,23 @@ if __name__ == "__main__":
     if os.path.exists(file_path):
         with open('SolutionsAleatoire/'+files[data_choix], 'rb') as f:
             max_game = pickle.load(f)
-        print("Jeu : ",max_game)
+            DAOFichier.cree_fichier(max_game[1],"sortie_"+files[data_choix]+".txt")
+
+        print("Jeu : ",max_game[0])
     else:
         max_game = (0,[])
-    for i in range(1000):
+    for i in range(10):
         jeu.lancement_jeu(StrategieAleatoire())
         if jeu.score > max_game[0]:
             max_game = (jeu.score,jeu.actions)
     enregistrer_solution(max_game)
+    print("Save !")
     while True:
         jeu.lancement_jeu(StrategieAleatoire())
         if jeu.score > max_game[0]:
             max_game = (jeu.score,jeu.actions)
             enregistrer_solution(max_game)
+
 
 
 
