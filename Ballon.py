@@ -6,3 +6,4 @@ class Ballon:
     def __init__(self,coord:Vecteur3,objectif:Balise | None=None):
         self.coord = coord
         self.objectif = objectif
+        self.estSortie = False
