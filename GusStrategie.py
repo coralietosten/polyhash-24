@@ -2,24 +2,36 @@ from math import sqrt
 from math import inf
 from Polyhash import *
 from Ballon import *
+from Jeu import *
 from CarteIDBalises import *
 
 
 class GusStrategie:
     def __init__(self):
         self.polyhash = None
-        self.probabiliste = False
+        self.jeu = None
         self.dicobjectif = {}
-        self.listobjectif = []
-    def initialisation(self,polyhash : Polyhash):
+        self.listobjectif = [] #LISTE OBJECTIF CONTIENT EST UNE LISTE DE TUPLE (SCORE, COORDONNEES)
+
+        #------PARAMETRES MODIFIABLES------
+        self.probabiliste = False
+        self.profondeur = 10
+
+    def initialisation(self,polyhash : Polyhash,jeu : Jeu):
+        self.jeu = jeu
         self.polyhash = polyhash
         self.dicobjectif = self.calcul_dicobjectifs()
         self.listobjectif = self.dico_to_list(self.dicobjectif)
 
-    def donne_action(self, ballon, polyhash: Polyhash) -> int:
+        n = len(self.listobjectif)
+        for ballon in self.jeu.ballons :
+            #on associe a chaque ballon un objectif calculé grâce a la fonction listeobjectif
+            ballon.objectif = self.listobjectif[ballon.id%n][1]
+
+    def donne_action(self, ballon) -> int:
         """entrée : un ballon et les données du polyhash
            sortie : l'action à effectuer pour un tour pour un ballon"""
-        pass
+        return self.prochainpoint(ballon)
 
     def dico_to_list(self,dicobjectif) -> list[(int,Vecteur2)]:
         """
@@ -62,30 +74,30 @@ class GusStrategie:
         else : #sinon on renvoit -1,-1,-1 qui renvoit infinie dans la fonction distance
             return Vecteur3(-1,-1,-1)
 
-    def prochainpoint(self,ballon : Ballon , goal : Vecteur2, prof : int, proba : bool) -> int:
+    def prochainpoint(self,ballon : Ballon) -> int:
         """
-        calcul la prochaine en fonction des coordonnées du drone (co), de son objectif (goal) de la carte (map),
+        calcul la prochaine en fonction des coordonnées du drone (co), de son objectif de la carte (map),
         de la profondeur(prof) et de l'utilisation ou non de système probabiliste(proba)
         """
         cartevent = self.polyhash.carte_vent
         hauteur = len(cartevent.vents)
         def aux(co2 : Vecteur3,prof2 : int):
             if prof2 == 0 :
-                return self.distance(Vecteur2(co2.x,co2.y),goal) #si la profondeur est nulle on renvoit l'heuristique (distance a vol d'oiseau)
+                return self.distance(Vecteur2(co2.x,co2.y),ballon.objectif) #si la profondeur est nulle on renvoit l'heuristique (distance a vol d'oiseau)
             l = [aux(self.nextpos(co2 + Vecteur3(0,0,0)),prof2-1)]
             if co2.z < hauteur : #on vérifie si on peut aller au nord sans sortir de la map, si c'est le cas on calcul cette possibilité)
                 l.append(aux(self.nextpos(co2 + Vecteur3(0,0,1)),prof2-1))
             if co2.z > 0 :
                 l.append(aux(self.nextpos(co2 + Vecteur3(0,0,-1)),prof2-1))
-            if proba :
+            if self.probabiliste :
                 return #à coder, renvoit la prochaine coordonnée de manière probabiliste (plus l'heuristique est petite, plus elle a de chance d'être choisie)
             else :
                 return min(l) #renvoit la prochaine coordonnée
-        positions = {aux(ballon.coord,prof) : 0,}
+        positions = {aux(ballon.coord,self.profondeur) : 0,}
         if ballon.coord.z > 0 :
-            positions[aux(ballon.coord + Vecteur3(0,0,-1),prof)] = -1
+            positions[aux(ballon.coord + Vecteur3(0,0,-1),self.profondeur)] = -1
         if ballon.coord.z < hauteur :
-            positions[aux(ballon.coord + Vecteur3(0,0,1),prof)] = 1
+            positions[aux(ballon.coord + Vecteur3(0,0,1),self.profondeur)] = 1
         return positions[min(positions.keys())] #on renvoit l'action associée a la distance minimale
 
     def calcul_dicobjectifs(self):
