@@ -2,7 +2,7 @@ from Polyhash import *
 from Ballon import Ballon
 
 from StrategieInterface import StrategieInterface
-from Strategies.StrategieAleatoire import StrategieAleatoire 
+from Strategies.StrategieAleatoire import StrategieAleatoire
 from Vecteur3 import Vecteur3
 class Jeu:
 
@@ -21,7 +21,7 @@ class Jeu:
         #todo : Ajouter la carteIdBalise
 
     def calcul_score_tour(self):
-        """calcul le score du tour pour tous les ballons""" 
+        """calcul le score du tour pour tous les ballons"""
         return 0
 
     def mise_a_jour(self):
@@ -38,7 +38,6 @@ class Jeu:
             action_tour.append(action_b) #ajout des actions de chaque ballons
         self.actions.append(action_tour)
         self.score += self.calcul_score_tour()
-        
 
     def lancement_jeu(self,strategie:StrategieInterface):
         """Exécute tout le jeu en utilisant la stratégie."""
@@ -49,6 +48,5 @@ class Jeu:
             self.mise_a_jour()
 
 
-            
-    
-    
+
+

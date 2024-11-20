@@ -1,117 +1,95 @@
-from maths import sqrt
-def fichier():
-    return
+from math import sqrt
+from math import inf
+from Polyhash import *
+from Ballon import *
+from CarteIDBalises import *
 
-Class ballon:
-    def __init__ (self,co = (0,0),h = 0,goal = (0,0)):
-        self.co : (int,int)
-        self.h
+def distance(co1 : Vecteur2,co2 : Vecteur2): #caclul de l'heuristique (distance a vol d'oiseau) entre un ballon et son objectif
+    if co1 == Vecteur3(-1,-1,-1) :
+        return inf
+    return sqrt((co1.x-co2.x)**2 + (co1.y-co2.y)**2)
 
+def nextpos(coord : Vecteur3, cartevent : CarteVent):# co : (x,y,z) map : [z][y][x]
+    """
+    renvoit la prochaine position dans la carte, en prenant en argument une coordonnée et la carte vent,
+    si la position sort de la carte vers le haut ou vers le bas, renvoit Vecteur3(-1,-1,-1)
+    """
+    if coord == Vecteur3(-1,-1,-1) :
+        return Vecteur3(-1,-1,-1)
+    longueur = len(cartevent.vents[0])
+    largeur = len(cartevent.vents[0][0])
+    vent = cartevent.vents[coord.z][coord.x][coord.y]
+    newpos = Vecteur3((coord.x + vent.x)%longueur,(coord.y + vent.y),coord.z)
+    if newpos.y >= 0 and newpos.y < largeur : #si la position est toujours dans la carte on la renvoit
+        return newpos
+    else : #sinon on renvoit -1,-1,-1 qui renvoit infinie dans la fonction distance
+        return Vecteur3(-1,-1,-1)
 
-
-def h(co1,co2): #caclul de l'heuristique (distance a vol d'oiseau) entre un ballon et son objectif
-    return sqrt((co1[0]-co2[0])**2 + (co1[1]-co2[1])**2)
-
-
-def nextpos(co,map): #co : (x,y,z) map : [z][y][x]
-    vent = map[co[2]][co[1]][co[0]] #récupération du vecteur vent sur la case donnée
-    return (co[0] + vent[0],co[1] + vent[1],co[2]) #ajout du vecteur vent aux coordonnées de base
-
-def prochainpoint(co,goal,map,prof,proba): #calcul le prochain point a prendre en fonction des coordonnées du drone (co), de son objectif (goal) de la carte (map), de la profondeur(prof) et de l'utilisation ou non de système probabiliste(proba)
-    def aux(co2,prof2,movement):
+def prochainpoint(ballon : Ballon , goal : Vecteur2 , cartevent : CarteVent, prof : int, proba : bool) -> int:
+    """
+    calcul la prochaine en fonction des coordonnées du drone (co), de son objectif (goal) de la carte (map),
+    de la profondeur(prof) et de l'utilisation ou non de système probabiliste(proba)
+    """
+    hauteur = len(cartevent.vents)
+    def aux(co2 : Vecteur3,prof2 : int):
         if prof2 == 0 :
-            return h(co2,goal)
-        haut = nextpos(co2 + (0,0,1))
-        rien = nextpos(co2 + (0,0,0))
-        bas  = nextpos(co2 + (0,0,-1))
+            return distance(Vecteur2(co2.x,co2.y),goal) #si la profondeur est nulle on renvoit l'heuristique (distance a vol d'oiseau)
+        l = [aux(nextpos(co2 + Vecteur3(0,0,0),cartevent),prof2-1)]
+        if co2.z < hauteur : #on vérifie si on peut aller au nord sans sortir de la map, si c'est le cas on calcul cette possibilité)
+            l.append(aux(nextpos(co2 + Vecteur3(0,0,1),cartevent),prof2-1))
+        if co2.z > 0 :
+            l.append(aux(nextpos(co2 + Vecteur3(0,0,-1),cartevent),prof2-1))
         if proba :
             return #à coder, renvoit la prochaine coordonnée de manière probabiliste (plus l'heuristique est petite, plus elle a de chance d'être choisie)
         else :
-            return min(aux(haut,prof2-1),aux(rien,prof2-1),aux(bas,prof2-1)) #renvoit la prochaine coordonnée
+            return min(l) #renvoit la prochaine coordonnée
+    positions = {aux(ballon.coord,prof) : 0,}
+    if ballon.coord.z > 0 :
+        positions[aux(ballon.coord + Vecteur3(0,0,-1),prof)] = -1
+    if ballon.coord.z < hauteur :
+        positions[aux(ballon.coord + Vecteur3(0,0,1),prof)] = 1
+    return positions[min(positions.keys())] #on renvoit l'action associée a la distance minimale
 
-
-
-def calculmapbalise(distance,lbalise,l,L):
+def listeobjectifs(lbalises,dcouverture : int,carteidbalises : CarteIDBalises):
     """
-    prend en argument la distance de couverture, la liste des balises a couvrir, la longueur l et la largeur L de la carte et
-    renvoit une carte avec dans chaque case la liste des ID de balise qui sont affectés par la zone de couverture du ballon
+    prend en argument la liste des balises et renvoit une liste des scores contenant une liste de coordonnée avec le score associé, trié par ordre d'importance
     """
-    tab = [[[] for i in range(l)] for j in range(L)]
-    lcercle = cercle(distance)
-    for balise in lbalisee :
-        for coord in lcercle :
-            if inbounds(balise.x + coord.x, balise.y + coord.y):
-                tab[balise.y + coord.y][balise.x + coord.x].append(balise.id)
-    return tab
+    listescore = {} #listescore[IDbalise] = (score associé a la balise,balises adjacentes)
+    for b1 in lbalises :
+        balisesadjacentes = []
+        for b2 in lbalises :
+            if b1.id != b2.id and distance(b1.coord,b2.coord) < (dcouverture * 2) - 1 :
+                balisesadjacentes.append(b2)
+        bcentre = baricentre(balisesadjacentes)
+        score = carteidbalises.cartesBalises[bcentre.x][bcentre.y]
+        listescore[b1] = (bcentre,score,balisesadjacentes)
+    for b in listescore.keys():
+        #pour toute les balises adjacente a la balise b
+        for badj in listescore[b][2] :
+            #si une des balises adjacentes contient un score superieur a la balise b
+            if listescore[badj][0] > listescore[b][0] :
+                #supprimer la balise b de la liste des scores
+                del listescore[b]
+    return listescore
+#O(nbBalise^2)
+
+def baricentre(lbalises) :
+    xsum = 0
+    ysum = 0
+    n = len(lbalises)
+    for b in lbalises :
+        xsum += b.coord.x
+        ysum += b.coord.y
+    centre = Vecteur2(xsum/n,ysum/n)
+    return centre
 
 
+class GusStrategie:
+    def initialisation(self):
+        pass
 
-
-def calculmapgoal(mapbalise,l,L):
-    """
-    prend en argument la carte des ID de balise et avec, fait une carte de score avec le nombre dans la case correspondant au nombre de balise
-    affectée par la zone
-    """
-    return tab = [[len(mapbalise[j][i]) for i in range(l)] for j in range(L)]
-    
-
-
-def cercle(distance : int) -> List[vecteur2]:
-
-
-
-
-[
-    [
-        [(1,2),(1,2),(1,2),(1,2),(1,2),(1,2)],
-        [(1,2),(1,2),(1,2),(1,2),(1,2),(1,2)],
-        [(1,2),(1,2),(1,2),(1,2),(1,2),(1,2)]
-    ],
-    [
-        [(1,2),(1,2),(1,2),(1,2),(1,2),(1,2)],
-        [(1,2),(1,2),(1,2),(1,2),(1,2),(1,2)],
-        [(1,2),(1,2),(1,2),(1,2),(1,2),(1,2)]
-    ],
-    [
-        [(1,2),(1,2),(1,2),(1,2),(1,2),(1,2)],
-        [(1,2),(1,2),(1,2),(1,2),(1,2),(1,2)],
-        [(1,2),(1,2),(1,2),(1,2),(1,2),(1,2)]
-    ]
-]
-
-[
-    [[ ],[1],[ ],[ ],[ ],[3],[3],[3]],
-    [[1],[1],[1],[ ],[ ],[ ],[2,3],[ ]],
-    [[ ],[1],[ ],[ ],[ ],[2],[2],[2]],
-    [[ ],[ ],[ ],[ ],[ ],[ ],[2],[ ]],
-]
-
-
-
-
-
-
-def heuristique():
-
-
-
-#la grille a droite se relie a gauche
-
-
-
-
-
-
-#Classes :
-#vecteur2 : x : int, y : int
-
-#vecteur3 : x : int, y : int, z : int
-
-#ballons-drone : position : vecteur3, goal : vecteur2
-
-#CarteVent : List.List.List[vecteur2]
-
-#CarteGoal : List.List.List[int] <- id balises
-
-#DAO file : nbballons : int, nb balise : int ...................
+    def donne_action(self, ballon, polyhash: Polyhash) -> int:
+        """entrée : un ballon et les données du polyhash
+           sortie : l'action à effectuer pour un tour pour un ballon"""
+        pass
 
