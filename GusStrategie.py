@@ -17,21 +17,16 @@ class GusStrategie:
         self.probabiliste = False
         self.profondeur = 10
 
-    def initialisation(self,polyhash : Polyhash,jeu : Jeu):
-        self.jeu = jeu
+    def initialisation(self,polyhash : Polyhash):
         self.polyhash = polyhash
         self.dicobjectif = self.calcul_dicobjectifs()
         self.listobjectif = self.dico_to_list(self.dicobjectif)
 
-        n = len(self.listobjectif)
-        for ballon in self.jeu.ballons :
-            #on associe a chaque ballon un objectif calculé grâce a la fonction listeobjectif
-            ballon.objectif = self.listobjectif[ballon.id%n][1]
-
     def donne_action(self, ballon) -> int:
         """entrée : un ballon et les données du polyhash
            sortie : l'action à effectuer pour un tour pour un ballon"""
-        return self.prochainpoint(ballon)
+        n = len(self.listobjectif) #on associe au ballon un objectif calculé grâce a la fonction listeobjectif
+        return self.prochainpoint(ballon,self.listobjectif[ballon.id%n][1])
 
     def dico_to_list(self,dicobjectif) -> list[(int,Vecteur2)]:
         """
@@ -74,7 +69,7 @@ class GusStrategie:
         else : #sinon on renvoit -1,-1,-1 qui renvoit infinie dans la fonction distance
             return Vecteur3(-1,-1,-1)
 
-    def prochainpoint(self,ballon : Ballon) -> int:
+    def prochainpoint(self,ballon : Ballon, objectif) -> int:
         """
         calcul la prochaine en fonction des coordonnées du drone (co), de son objectif de la carte (map),
         de la profondeur(prof) et de l'utilisation ou non de système probabiliste(proba)
@@ -83,7 +78,7 @@ class GusStrategie:
         hauteur = len(cartevent.vents)
         def aux(co2 : Vecteur3,prof2 : int):
             if prof2 == 0 :
-                return self.distance(Vecteur2(co2.x,co2.y),ballon.objectif) #si la profondeur est nulle on renvoit l'heuristique (distance a vol d'oiseau)
+                return self.distance(Vecteur2(co2.x,co2.y),objectif) #si la profondeur est nulle on renvoit l'heuristique (distance a vol d'oiseau)
             l = [aux(self.nextpos(co2 + Vecteur3(0,0,0)),prof2-1)]
             if co2.z < hauteur : #on vérifie si on peut aller au nord sans sortir de la map, si c'est le cas on calcul cette possibilité)
                 l.append(aux(self.nextpos(co2 + Vecteur3(0,0,1)),prof2-1))
