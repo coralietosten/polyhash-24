@@ -86,10 +86,11 @@ class StrategieProche(StrategieInterface):
         for i in altitudes_disponibles :
             coord_v2_ballon = Vecteur2(coord_ballon.x, coord_ballon.y)
             coord_arrivee = coord_v2_ballon + carte_vent[coord_ballon.z + i][coord_ballon.y][coord_ballon.x]
-            dist = self.distance_v2(self.objectifs[ballon.id].coord, coord_arrivee)
-            if dist < dist_min :
-                dist_min = dist 
-                altitude_a_prendre = i 
+            if coord_arrivee.x < self.polyhash.colonnes and coord_arrivee.x > 0 and coord_arrivee.y < self.polyhash.lignes and coord_arrivee.y > 0 :#si le ballon est dans la map
+                dist = self.distance_v2(self.objectifs[ballon.id].coord, coord_arrivee)
+                if dist < dist_min :
+                    dist_min = dist 
+                    altitude_a_prendre = i 
         return altitude_a_prendre
 
 
