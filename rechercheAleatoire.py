@@ -12,7 +12,7 @@ files = ["a_example","b_small","c_medium","d_final"]
 def enregistrer_solution(game):
     global files
     global data_choix
-    with open('SolutionsAleatoire/'+files[data_choix], 'wb') as f:
+    with open('SauvegardeAleatoire/'+files[data_choix], 'wb') as f:
             pickle.dump(game, f)
 if __name__ == "__main__":
     DAO = DAOFichier
@@ -20,11 +20,11 @@ if __name__ == "__main__":
     jeu = Jeu(polyhash)
     #Utilisation la Stratégie Aléatoire
 
-    file_path = 'SolutionsAleatoire/'+files[data_choix]
+    file_path = 'SauvegardeAleatoire/'+files[data_choix]
     if os.path.exists(file_path):
-        with open('SolutionsAleatoire/'+files[data_choix], 'rb') as f:
+        with open('SauvegardeAleatoire/'+files[data_choix], 'rb') as f:
             max_game = pickle.load(f)
-            DAOFichier.cree_fichier(max_game[1],"sortie_"+files[data_choix]+".txt")
+            DAOFichier.cree_fichier(max_game[1],"PropositionSolution/StrategieAleatoire/sortie_"+files[data_choix]+".txt")
 
         print("Jeu : ",max_game[0])
     else:
@@ -40,6 +40,7 @@ if __name__ == "__main__":
         if jeu.score > max_game[0]:
             max_game = (jeu.score,jeu.actions)
             enregistrer_solution(max_game)
+            print("Une meilleure solution a été trouvé !")
 
 
 
