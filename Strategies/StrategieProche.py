@@ -34,28 +34,42 @@ class StrategieProche(StrategieInterface):
         """
         return sqrt((vecteur1.x - vecteur2.x)**2 + (vecteur1.y - vecteur2.y)**2)
 
-    def balise_proche(self):
+    def balise_proche(self,coords):
         """
-        renvoie la balise la plus proche du ballon
+        renvoie la balise la plus proche du ballon 
         """
-        coord_depart = self.polyhash.depart
+        # coord_ballon = ballon.coord.x,ballon.coord.y
         bal_proche = Balise(Vecteur2(0,0))
         dist_min = self.polyhash.colonnes * self.polyhash.lignes
         for b in self.polyhash.cibles:
-            if self.distance (coord_depart , b.coord) < dist_min :
-                dist_min = self.distance (coord_depart , b.coord)
+            if self.distance (coords , b.coord) < dist_min :
+                dist_min = self.distance (coords , b.coord)
                 bal_proche = b
+        return bal_proche
+    
+    def balise_proche2(self,ballon):
+        """
+        renvoie la deuxieme balise la plus proche du ballon
+        """
+        coord_ballon = ballon.coord.x,ballon.coord.y
+        bal_proche = Balise(Vecteur2(0,0))
+        dist_min = self.polyhash.colonnes * self.polyhash.lignes
+        for b in self.polyhash.cibles:
+            if self.distance (coord_ballon , b.coord) < dist_min :
+                if dist_min != self.balise_proche(ballon) :
+                    dist_min = self.distance (coord_ballon , b.coord)
+                    bal_proche = b
         return bal_proche
 
     def objectifs_ballons(self):
         """
         renvoie la cible objectif de chaque ballon sous forme de dictionnaire : clé : id_ballon, valeur :cible objectif du ballon
-         """
+        """
         nb_ballons = self.polyhash.nombre_ballons
         objectifs ={}
         cibles = self.polyhash.cibles
         for i in range(nb_ballons):
-            balise_i = self.balise_proche()
+            balise_i = self.balise_proche(self.polyhash.depart)
             if balise_i in cibles :
                 cibles.remove(balise_i)
             objectifs[i] = balise_i
@@ -63,7 +77,7 @@ class StrategieProche(StrategieInterface):
     
     def donne_action(self, ballon) -> int:
         """entrée : un ballon et les données du polyhash
-           sortie : l'action à effectuer pour un tour pour un ballon"""
+           sortie : l'action à effectuer pour un tour pour un ballon""" 
         if ballon.id not in self.ballons :
             self.ballons.append(ballon)
         #calcul des altitudes disponibles
@@ -86,11 +100,17 @@ class StrategieProche(StrategieInterface):
         for i in altitudes_disponibles :
             coord_v2_ballon = Vecteur2(coord_ballon.x, coord_ballon.y)
             coord_arrivee = coord_v2_ballon + carte_vent[coord_ballon.z + i][coord_ballon.y][coord_ballon.x]
-            if coord_arrivee.x < self.polyhash.colonnes and coord_arrivee.x > 0 and coord_arrivee.y < self.polyhash.lignes and coord_arrivee.y > 0 :#si le ballon est dans la map
+            if coord_arrivee.x < self.polyhash.colonnes and coord_arrivee.x >= 0 and coord_arrivee.y < self.polyhash.lignes and coord_arrivee.y >= 0 :#si le ballon est dans la map
                 dist = self.distance_v2(self.objectifs[ballon.id].coord, coord_arrivee)
                 if dist < dist_min :
                     dist_min = dist 
-                    altitude_a_prendre = i 
+                    altitude_a_prendre = i
+
+        #recalcul de la cible objectif du ballon s'il est sur sa case
+        if ballon.coord == self.objectifs[ballon.id].coord :
+            balise2 = self.balise_proche2(ballon)
+            if self.distance(ballon.coord , balise2.coord) < self.distance(ballon.coord,self.objectifs[ballon.id].coord ):
+                self.objectifs[ballon.id] = balise2
         return altitude_a_prendre
 
 
