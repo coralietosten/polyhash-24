@@ -4,8 +4,9 @@ from Ballon import Ballon
 from StrategieInterface import StrategieInterface
 from Strategies.StrategieAleatoire import StrategieAleatoire
 from Vecteur3 import Vecteur3
-class Jeu:
 
+class Jeu:
+    
     def __init__(self,polyhash):
         self.polyhash : Polyhash = polyhash
         self.ballons = []
@@ -57,7 +58,7 @@ class Jeu:
                     if b.coord.y < 0 or b.coord.y >= self.polyhash.lignes:
                         b.estSortie = True
             else:
-                action_b=0
+                action_b = 0
             action_tour.append(action_b) #ajout des actions de chaque ballons
         self.actions.append(action_tour)
         self.score += self.calcul_score_tour()

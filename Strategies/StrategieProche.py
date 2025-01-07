@@ -24,46 +24,53 @@ class StrategieProche(StrategieInterface):
     
     def distance (self,vecteur1 : Vecteur3 , vecteur2 : Vecteur2):
         """
-        renvoie la distance entre le vecteur1 et le vecteur2
+        entrée : un vecteur2 et un vecteur3
+        sortie : la distance euclidienne entre le vecteur1 et le vecteur2
         """
-        return sqrt((vecteur1.x - vecteur2.x)**2 + (vecteur1.y - vecteur2.y)**2) 
+        #distance de manathan
+        return abs(vecteur2.x - vecteur1.x) + abs(vecteur2.y - vecteur1.y)
+        # return sqrt((vecteur1.x - vecteur2.x)**2 + (vecteur1.y - vecteur2.y)**2) 
 
     def distance_v2 (self,vecteur1 : Vecteur2, vecteur2 : Vecteur2):
         """
-        renvoie la distance entre le vecteur1 et le vecteur2
+        entrée : 2 vecteur2
+        sortie : la distance euclidienne entre le vecteur1 et le vecteur2
         """
-        return sqrt((vecteur1.x - vecteur2.x)**2 + (vecteur1.y - vecteur2.y)**2)
+        #distance de manathan
+        return abs(vecteur2.x - vecteur1.x) + abs(vecteur2.y - vecteur1.y)
+        # return sqrt((vecteur1.x - vecteur2.x)**2 + (vecteur1.y - vecteur2.y)**2)
 
-    def balise_proche(self,coords):
+    def balise_proche(self,coords : Vecteur3):
         """
-        renvoie la balise la plus proche du ballon 
+        entrée : les coordonées d'un vecteur3
+        sortie : la balise la plus proche des coordonnées
         """
-        # coord_ballon = ballon.coord.x,ballon.coord.y
         bal_proche = Balise(Vecteur2(0,0))
         dist_min = self.polyhash.colonnes * self.polyhash.lignes
-        for b in self.polyhash.cibles:
-            if self.distance (coords , b.coord) < dist_min :
-                dist_min = self.distance (coords , b.coord)
-                bal_proche = b
+        for c in self.polyhash.cibles:
+            if self.distance (coords , c.coord) < dist_min :
+                dist_min = self.distance (coords , c.coord)
+                bal_proche = c
         return bal_proche
     
-    def balise_proche2(self,ballon):
+    def balise_proche2(self,ballon : Ballon):
         """
-        renvoie la deuxieme balise la plus proche du ballon
+        entrée : un ballon
+        sortie : la deuxieme balise la plus proche du ballon
         """
         coord_ballon = ballon.coord.x,ballon.coord.y
         bal_proche = Balise(Vecteur2(0,0))
         dist_min = self.polyhash.colonnes * self.polyhash.lignes
-        for b in self.polyhash.cibles:
-            if self.distance (coord_ballon , b.coord) < dist_min :
+        for c in self.polyhash.cibles:
+            if self.distance (coord_ballon , c.coord) < dist_min :
                 if dist_min != self.balise_proche(ballon) :
-                    dist_min = self.distance (coord_ballon , b.coord)
-                    bal_proche = b
+                    dist_min = self.distance (coord_ballon , c.coord)
+                    bal_proche = c
         return bal_proche
 
     def objectifs_ballons(self):
         """
-        renvoie la cible objectif de chaque ballon sous forme de dictionnaire : clé : id_ballon, valeur :cible objectif du ballon
+        sortie : la cible objectif de chaque ballon sous forme de dictionnaire : clé : id_ballon, valeur :cible objectif du ballon
         """
         nb_ballons = self.polyhash.nombre_ballons
         objectifs ={}
@@ -94,18 +101,17 @@ class StrategieProche(StrategieInterface):
             altitudes_disponibles.append(0)
         #récuperation des vents
         carte_vent = self.polyhash.carte_vent
-        #determination des coordonnées les plus pres de la cible objectif du ballon
+        #determination des coordonnées les plus proche de la cible objectif du ballon
         dist_min = self.polyhash.lignes * self.polyhash.colonnes
         altitude_a_prendre = 0
         for i in altitudes_disponibles :
             coord_v2_ballon = Vecteur2(coord_ballon.x, coord_ballon.y)
             coord_arrivee = coord_v2_ballon + carte_vent[coord_ballon.z + i][coord_ballon.y][coord_ballon.x]
-            if coord_arrivee.x < self.polyhash.colonnes and coord_arrivee.x >= 0 and coord_arrivee.y < self.polyhash.lignes and coord_arrivee.y >= 0 :#si le ballon est dans la map
+            if coord_arrivee.x < self.polyhash.colonnes and coord_arrivee.x >= 0 and coord_arrivee.y < self.polyhash.lignes and coord_arrivee.y >= 0 :
                 dist = self.distance_v2(self.objectifs[ballon.id].coord, coord_arrivee)
                 if dist < dist_min :
                     dist_min = dist 
                     altitude_a_prendre = i
-
         #recalcul de la cible objectif du ballon s'il est sur sa case
         if ballon.coord == self.objectifs[ballon.id].coord :
             balise2 = self.balise_proche2(ballon)
