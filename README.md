@@ -16,7 +16,7 @@ Ce dépôt correspond au projet informatique de première années de 4 étudiant
 - Stratégie Aléatoire
 - Stratégie Proche
 - Stratégie Aléatoire évolutive variée
-- Stratégie finale : A star + clustering + stratégie aléatoire évolutive variée
+- Stratégie finale : A star + clustering + stratégie aléatoire évolutive
 
 ### Assignation des taches :
 - Augustin : Gestion du groupe, travail théorique sur la résolution du problème (système de clustering, stratégie aléatoire variée), trouver des idées, régler les problèmes d'optimisation. Réalisation d'une première version prototype de A star + clustering. Travail en binôme avec Roudy sur le clustering.
