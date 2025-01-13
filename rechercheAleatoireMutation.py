@@ -3,11 +3,11 @@ from DAOFichier import DAOFichier
 from Jeu import Jeu
 from Strategies.StrategieAleatoireMutation import StrategieAleatoireMutation
 from Polyhash import Polyhash
-import simpleaudio as sa
+# import simpleaudio as sa
 import pickle
 import time
 # define an object to play
-wave_object = sa.WaveObject.from_wave_file('son2.wav')
+# wave_object = sa.WaveObject.from_wave_file('son2.wav')
 
 
 
@@ -58,26 +58,36 @@ if __name__ == "__main__":
         strat.nbMaxNewChemin =  0
         strat.nbMaxMutations = 10 
         strat.mutation_chemin_p = 0.0001 
-    while True:
-        try:
-            strat.max_game = max_game[1]
-            jeu.lancement_jeu(strat)
-            if jeu.score > max_game[0]:
-                max_game = (jeu.score,jeu.actions)
-                enregistrer_solution(max_game)
-                print("Une meilleure solution a été trouvé ! : ",jeu.score)
-                
-                play_object = wave_object.play()
 
-            print(jeu.score)
-        except Exception as e:
-            print("Une erreur est survenue :", str(e))
-            break
+    import multiprocessing
+    import threading
 
-    
+    max_game_value = multiprocessing.Value('d', max_game[0]) 
+    max_game_actions = multiprocessing.Manager().list(max_game[1])
 
+    lock = threading.Lock()
 
+    def travail(task_id):
+        global max_game_value, max_game_actions
+        while True:
+            try:
+                strat.max_game = list(max_game_actions)
+                jeu.lancement_jeu(strat)
 
+                if jeu.score > max_game_value.value:
+                    with lock:
+                        if jeu.score > max_game_value.value:
+                            max_game_value.value = jeu.score
+                            max_game_actions[:] = jeu.actions 
+                            enregistrer_solution((max_game_value.value, list(max_game_actions)))
+                            print(f"Une meilleure solution a été trouvée par le cœur {task_id} : {jeu.score}")
 
+            except Exception as e:
+                print(f"Une erreur est survenue dans le cœur {task_id} : {str(e)}")
+                break
 
-    
+    num_cores = multiprocessing.cpu_count() - 0
+    print(f"Lancement avec {num_cores} cœurs")
+
+    with multiprocessing.Pool(num_cores) as pool:
+        pool.map(travail, range(num_cores))
