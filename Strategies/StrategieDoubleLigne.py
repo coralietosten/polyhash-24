@@ -12,18 +12,19 @@ from Vecteur2 import Vecteur2
 
 from StrategieInterface import StrategieInterface
 
-class StrategieLigne(StrategieInterface):
+class StrategieDoubleLigne(StrategieInterface):
     def __init__(self):
         self.polyhassh = None
         self.objectifs = {}
         self.ballons = []
         self.yobjectif = 0
         self.tour = 0
-        self.interval = 80
+        self.interval = 40
     def initialisation(self,polyhash : Polyhash):
         self.polyhash = polyhash
-        self.yobjectif = 15 #self.meilleury()
-    
+        self.yobjectif1 = 10
+        self.yobjectif2 = 20
+
     def meilleury(self):
         liste = [0 for i in range(self.polyhash.lignes)]
         for balise in self.polyhash.cibles :
@@ -39,7 +40,6 @@ class StrategieLigne(StrategieInterface):
     def donne_action(self, ballon) -> int:
         """entrée : un ballon et les données du polyhash
            sortie : l'action à effectuer pour un tour pour un ballon"""
-
         if ballon.id not in self.ballons :
             self.ballons.append(ballon)
         self.tour += 1
@@ -66,7 +66,10 @@ class StrategieLigne(StrategieInterface):
             coord_v2_ballon = Vecteur2(coord_ballon.x, coord_ballon.y)
             coord_arrivee = coord_v2_ballon + carte_vent[coord_ballon.z + i][coord_ballon.y][coord_ballon.x]
             if coord_arrivee.x < self.polyhash.colonnes and coord_arrivee.x >= 0 and coord_arrivee.y < self.polyhash.lignes and coord_arrivee.y >= 0 :
-                dist = abs(coord_arrivee.y - self.yobjectif)
+                if(ballon.id%2 == 0) :
+                    dist = abs(coord_arrivee.y - self.yobjectif1)
+                else:
+                    dist = abs(coord_arrivee.y - self.yobjectif2)
                 if dist < dist_min :
                     dist_min = dist 
                     altitude_a_prendre = i

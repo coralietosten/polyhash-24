@@ -12,18 +12,27 @@ from Vecteur2 import Vecteur2
 
 from StrategieInterface import StrategieInterface
 
-class StrategieDoubleLigne(StrategieInterface):
+class StrategieTripleLigne(StrategieInterface):
     def __init__(self):
         self.polyhassh = None
         self.objectifs = {}
         self.ballons = []
         self.yobjectif = 0
         self.tour = 0
-        self.interval = 40
+        self.interval = 36
     def initialisation(self,polyhash : Polyhash):
         self.polyhash = polyhash
-        self.yobjectif1 = 10
-        self.yobjectif2 = 20
+        self.yobjectif1Afrique = 10
+        self.yobjectif2Afrique = 20
+        self.yobjectif3Afrique = 30
+        self.yobjectif1Australie = 10
+        self.yobjectif2Australie = 20
+        self.yobjectif3Australie = 30
+        self.yobjectif1Amerique = 10
+        self.yobjectif2Amerique = 20
+        self.yobjectif3Amerique = 30
+        self.debAfrique = 120
+        self.debAustralie = 220
 
     def meilleury(self):
         liste = [0 for i in range(self.polyhash.lignes)]
@@ -43,7 +52,7 @@ class StrategieDoubleLigne(StrategieInterface):
         if ballon.id not in self.ballons :
             self.ballons.append(ballon)
         self.tour += 1
-        if ballon.id*self.interval >= self.tour :
+        if (ballon.id - ballon.id%3) * self.interval >= self.tour :
             return 0
         #calcul des altitudes disponibles
         coord_ballon = ballon.coord
@@ -66,10 +75,27 @@ class StrategieDoubleLigne(StrategieInterface):
             coord_v2_ballon = Vecteur2(coord_ballon.x, coord_ballon.y)
             coord_arrivee = coord_v2_ballon + carte_vent[coord_ballon.z + i][coord_ballon.y][coord_ballon.x]
             if coord_arrivee.x < self.polyhash.colonnes and coord_arrivee.x >= 0 and coord_arrivee.y < self.polyhash.lignes and coord_arrivee.y >= 0 :
-                if(ballon.id%2 == 0) :
-                    dist = abs(coord_arrivee.y - self.yobjectif1)
-                else:
-                    dist = abs(coord_arrivee.y - self.yobjectif2)
+                if(ballon.id%3 == 0) :
+                    if(ballon.coord.x > self.debAfrique and ballon.coord.x < self.debAustralie):
+                        dist = abs(coord_arrivee.y - self.yobjectif1Afrique)
+                    elif(ballon.coord.x > self.debAustralie):
+                        dist = abs(coord_arrivee.y - self.yobjectif1Australie)
+                    else :
+                        dist = abs(coord_arrivee.y - self.yobjectif1Amerique)
+                elif(ballon.id%3 == 1) :
+                    if (ballon.coord.x > self.debAfrique and ballon.coord.x < self.debAustralie):
+                        dist = abs(coord_arrivee.y - self.yobjectif2Afrique)
+                    elif (ballon.coord.x > self.debAustralie):
+                        dist = abs(coord_arrivee.y - self.yobjectif2Australie)
+                    else:
+                        dist = abs(coord_arrivee.y - self.yobjectif2Amerique)
+                else :
+                    if (ballon.coord.x > self.debAfrique and ballon.coord.x < self.debAustralie):
+                        dist = abs(coord_arrivee.y - self.yobjectif3Afrique)
+                    elif (ballon.coord.x > self.debAustralie):
+                        dist = abs(coord_arrivee.y - self.yobjectif3Australie)
+                    else:
+                        dist = abs(coord_arrivee.y - self.yobjectif3Amerique)
                 if dist < dist_min :
                     dist_min = dist 
                     altitude_a_prendre = i
