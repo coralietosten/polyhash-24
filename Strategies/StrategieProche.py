@@ -82,11 +82,7 @@ class StrategieProche(StrategieInterface):
             objectifs[i] = balise_i
         return objectifs
     
-    def donne_action(self, ballon) -> int:
-        """entrée : un ballon et les données du polyhash
-           sortie : l'action à effectuer pour un tour pour un ballon""" 
-        if ballon.id not in self.ballons :
-            self.ballons.append(ballon)
+    def altitudes_dispo(self,ballon):
         #calcul des altitudes disponibles
         coord_ballon = ballon.coord
         altitudes_disponibles = []
@@ -99,6 +95,16 @@ class StrategieProche(StrategieInterface):
         elif coord_ballon.z == self.polyhash.altitudes -1:
             altitudes_disponibles.append(-1)
             altitudes_disponibles.append(0)
+        return altitudes_disponibles
+
+    def donne_action(self, ballon) -> int:
+        """entrée : un ballon et les données du polyhash
+           sortie : l'action à effectuer pour un tour pour un ballon""" 
+        if ballon.id not in self.ballons :
+            self.ballons.append(ballon)
+        #récupération des altitudes disponibles
+        coord_ballon = ballon.coord
+        altitudes_disponibles =self.altitudes_dispo(ballon)
         #récuperation des vents
         carte_vent = self.polyhash.carte_vent
         #determination des coordonnées les plus proche de la cible objectif du ballon
