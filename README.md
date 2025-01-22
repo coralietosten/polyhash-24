@@ -1,8 +1,6 @@
-# PolyHash-24
+# PolyHash-24 EQUIPE B : BLACK HAT
 
-Ce dépôt correspond au projet informatique de première années de 4 étudiants de Polytech Nantes.
-
-# EQUIPE B : BLACK HAT
+Ce dépôt correspond au projet informatique de troisième années de Polytech Nantes.
 
 ## Étudiants : 
 - Augustin BERNARD
@@ -19,11 +17,16 @@ A partir d'une carte des vents tridimensionnel, d'une liste de balise à couvrir
 
 - **Bryan** : Création de la stratégie aléatoire, aide pour la stratégie A star + clustering. Amélioration de la stratégie aléatoire en stratégie aléatoire évolutive, puis évolutive variée. Création d'une visualisation d'une carte contenant l'emplacement des balises et le déplacement des ballons sur la carte. Généralisation de la stratégie Triple Ligne en stratégie N Lignes.
 
-- **Roudy** : Fonction pour créer le DOT à partir du fichier d'entrée. Travail en binôme avec Augustin sur le clustering. Parralélisation de la stratégie Aléatoire évolutive variée sur ordinateur. Tentative de bruteforce la carte_d.
+- **Roudy** : Fonction pour créer le DAO (Data Access Object) à partir du fichier d'entrée. Travail en binôme avec Augustin sur le clustering. Parralélisation de la stratégie Aléatoire évolutive variée sur ordinateur. Tentative de bruteforce avec la stratégie arbre.
 
 - **Coralie** : Création de fonction permettant de lancer la simulation. Création de la stratégie proche. Travail avec Bryan sur la stratégie Aléatoire. Calcul de la complexité spatiale et du temps d'exécution de chaque stratégie.
 
 ## procédure d'installation ;
+
+Pour lancer le jeu : 
+```shell
+python3 polyhash.py data/a_example.in
+```
 
 ## procédure d'exécution ;
 Deux Objets utiles utilisés sur certaines stratégies :
@@ -87,3 +90,15 @@ Complexité : Linéaire (5 secondes)
 -> **Solution très efficace**, il ne reste plus qu'a adapter la fonction pour faire varier les paramètres et le nombre de lignes.
 
 ### - Stratégie N Lignes
+
+### - Stratégie Arbre
+
+Cette stratégie consiste à créer un arbre où chaque nœud correspond à une action possible (-1 pour descendre, 0 pour rester, 1 pour monter). Chaque nœud possède un score cumulé depuis le début. La profondeur de l'arbre est déterminée par le nombre de tours.
+
+Les nœuds feuilles sont triés en fonction de leur score, et la meilleure feuille est sélectionnée. Ensuite, le chemin des actions est construit en partant de cette feuille et en remontant l'arbre jusqu'à la racine.
+
+Une fois qu'un chemin est sélectionné, les scores des nœuds de chaque niveau de l'arbre sont mis à jour pour prendre en compte les balises déjà couvertes par le chemin sélectionné à un tour donné.
+
+Efficacité : Cette stratégie permet d'explorer différentes combinaisons d'actions et de trouver des chemins optimaux.
+
+Complexité : La complexité de cette stratégie dépend de la profondeur de l'arbre et du nombre de nœuds générés. Plus l'arbre est profond, plus le temps de calcul et la mémoire nécessaire augmentent. Cette approche devient inefficace pour des fichiers de taille moyenne comme c_medium en raison de la croissance exponentielle du nombre de nœuds.
