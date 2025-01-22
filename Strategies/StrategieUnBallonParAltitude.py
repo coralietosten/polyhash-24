@@ -1,4 +1,4 @@
-import os , sys
+import sys
 from os.path import dirname, join, abspath
 sys.path.insert(0,abspath(join(dirname(__file__),'..')))
 
@@ -8,6 +8,9 @@ from StrategieInterface import StrategieInterface
 from Ballon import Ballon
 
 class StrategieUnBallonParAltitude(StrategieInterface):
+    """
+    Stratégie où chaque ballon monte jusqu'à son altitude assignée.
+    """
     def __init__(self):
         self.polyhash = None
     
