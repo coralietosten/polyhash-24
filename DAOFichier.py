@@ -5,21 +5,23 @@ from Balise import Balise
 
 class DAOFichier:
     """
-    Classe pour lire un fichier de configuration et créer un objet `Polyhash`.
+    Classe pour lire un fichier de configuration et créer un objet `Polyhash`,
+    ainsi que pour écrire les déplacements des ballons dans un fichier de sortie.
 
     Méthodes :
-    ----------
-    - `donne_polyhash(nom_fichier: str) -> Polyhash` :
-        Lit un fichier et retourne un objet `Polyhash` initialisé à partir des données du fichier.
+    - `donne_polyhash(chemin_fichier: str) -> Polyhash` :
+        Lit un fichier de configuration et retourne un objet `Polyhash` initialisé à partir des données du fichier.
+    - `cree_fichier(list_deplacement: list[list[int]], chemin_sortie: str = "sortie.txt") -> None` :
+        Écrit les déplacements des ballons dans un fichier de sortie.
     """
 
     @staticmethod
-    def donne_polyhash(nom_fichier: str) -> Polyhash:
+    def donne_polyhash(chemin_fichier: str) -> Polyhash:
         """
         Lit un fichier de configuration et initialise un objet `Polyhash`.
         """
         try:
-            with open(nom_fichier, 'r') as input_file:
+            with open(chemin_fichier, 'r') as input_file:
                 contenu = input_file.read()  # Lecture du contenu du fichier
                 list_contenu = contenu.split("\n")
 
@@ -46,13 +48,19 @@ class DAOFichier:
                     ligne_i = list_contenu[i].split(" ")
                     cibles.append(Balise(Vecteur2(int(ligne_i[1]), int(ligne_i[0]))))
 
-                # Vents
+                # Initialisation de la carte des vents
                 carte_vent = []
+                # Boucle sur chaque altitude
                 for a in range(altitudes):
+                    # Initialisation de la liste des vents pour l'altitude courante
                     vent_altitude_a = []
+
+                    # Boucle sur les lignes correspondant à l'altitude courante
                     for l in range(3 + nombre_cibles + lignes * a, 3 + nombre_cibles + (a + 1) * lignes):
                         ligne_l = list_contenu[l].split(" ")
                         vent_ligne_l = []
+
+                        # Boucle sur les colonnes de la ligne courante (chaque paire de valeurs représente un vecteur de vent)
                         for c in range(0, colonnes * 2, 2):
                             vent_ligne_l.append(Vecteur2(int(ligne_l[c + 1]), int(ligne_l[c])))
                         vent_altitude_a.append(vent_ligne_l)
@@ -67,12 +75,15 @@ class DAOFichier:
                 return polyhash
 
         except FileNotFoundError:
-            raise FileNotFoundError(f"Le fichier spécifié '{nom_fichier}' est introuvable.")
+            raise FileNotFoundError(f"Le fichier spécifié '{chemin_fichier}' est introuvable.")
         except (ValueError, IndexError) as e:
-            raise ValueError(f"Le fichier '{nom_fichier}' contient des données invalides ou mal formatées. Détails : {e}")
+            raise ValueError(f"Le fichier '{chemin_fichier}' contient des données invalides ou mal formatées. Détails : {e}")
 
     @staticmethod
-    def cree_fichier(list_deplacement: list[list[int]],nom_sortie="sortie.txt") -> None:
+    def cree_fichier(list_deplacement: list[list[int]], chemin_sortie="sortie.txt") -> None:
+        """
+        Écrit les déplacements des ballons dans un fichier de sortie.
+        """
         contenu = ""
         for dep in list_deplacement :
             ligne = ""
@@ -81,5 +92,5 @@ class DAOFichier:
             ligne += "\n"
             contenu += ligne
         
-        with open(nom_sortie, 'w') as fichier:
+        with open(chemin_sortie, 'w') as fichier:
             fichier.write(contenu)
