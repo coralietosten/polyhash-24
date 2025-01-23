@@ -15,7 +15,7 @@ A partir d'une carte des vents tridimensionnel, d'une liste de balise à couvrir
 ## Assignation des taches :
 - **Augustin** : Gestion du groupe, travail théorique sur la résolution du problème (carte ID balises, décalage des ballons, système de clustering, stratégie aléatoire variée), trouver des idées, régler les problèmes d'optimisation. Réalisation d'une première version prototype de A star + clustering. Travail en binôme avec Roudy sur le clustering. Implémentation des stratégies ligne, double lignes et triple lignes pour la solution d a l'aide de la stratégie proche de Coralie et de la visualisation de carte de Bryan.
 
-- **Bryan** : Création de la stratégie aléatoire, aide pour la stratégie A star + clustering. Amélioration de la stratégie aléatoire en stratégie aléatoire évolutive, puis évolutive variée. Création d'une visualisation d'une carte contenant l'emplacement des balises et le déplacement des ballons sur la carte. Généralisation de la stratégie Triple Ligne en stratégie N Lignes.
+- **Bryan** : Création de la stratégie aléatoire, aide pour la stratégie A star + clustering. Amélioration de la stratégie aléatoire en stratégie aléatoire évolutive, puis évolutive variée. Création d'une visualisation d'une carte contenant l'emplacement des balises et le déplacement des ballons sur la carte.
 
 - **Roudy** : Fonction pour créer le DAO (Data Access Object) à partir du fichier d'entrée. Travail en binôme avec Augustin sur le clustering. Parralélisation de la stratégie Aléatoire évolutive variée sur ordinateur. Tentative de bruteforce avec la stratégie arbre.
 
@@ -88,8 +88,6 @@ Efficacité : Extremement efficace sur la carte_d (**432 000** sur la carte_d)
 Complexité : Linéaire (5 secondes)
 
 -> **Solution très efficace**, il ne reste plus qu'a adapter la fonction pour faire varier les paramètres et le nombre de lignes.
-
-### - Stratégie N Lignes
 
 ### - Stratégie Arbre
 
