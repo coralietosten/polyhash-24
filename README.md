@@ -3,10 +3,10 @@
 Ce dépôt correspond au projet informatique de troisième années de Polytech Nantes.
 
 ## Étudiants : 
-- Augustin BERNARD
-- Bryan LEVY
-- Coralie TOSTEN
-- Roudy HAJO
+- Augustin BERNARD - augustin.bernard@etu.univ-nantes.Fr
+- Roudy HAJO - roudy.hajo@etu.univ-nantes.Fr
+- Bryan LEVY - bryan.levy@@etu.univ-nantes.Fr
+- Coralie TOSTEN - coralie.tosten@etu.univ-nantes.Fr
 
 ## descriptif général du projet ;
 
