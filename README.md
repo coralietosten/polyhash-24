@@ -8,6 +8,67 @@ Ce dépôt correspond au projet informatique de troisième années de Polytech N
 - Bryan LEVY - bryan.levy@@etu.univ-nantes.Fr
 - Coralie TOSTEN - coralie.tosten@etu.univ-nantes.Fr
 
+
+## Consigne d'exécution du projet
+
+Le fichier **main.py** permet le lancement des différentes stratégies, l'affichage de leur score sur un fichier de données et l'enregistrement du meilleure score.
+
+Pour cela, il y a 2 possibilité pour lancer **main.py** : 
+```python
+python fichier.py chemin/fichier_entree.txt chemin/fichier_sortie.txt 
+```
+Où `chemin/fichier_entree.txt` désigne le fichier de données d'entrée 
+et `chemin/fichier_sortie.txt` désigne le chemin du fichier où sera enregistrer la solution 
+
+Les fichiers de données sont stockés dans `data/` 
+Il est alors possible de seulement préciser le fichier de sortie tel que : 
+```python
+python fichier.py chemin/fichier_sortie.txt
+```
+La liste des fichiers stockés dans data/ sera alors listée et il suffira alors d'entrer le numéro du fichier correspondant.
+
+exemple pour choisir le fichier `d_final.in` : 
+```
+0 - a_example.in  
+1 - b_small.in
+2 - c_medium.in
+3 - d_final.in
+
+>> 3
+```
+
+## Organisation du git 
+
+### Dossier Strategies/
+
+Dans ce dossier est stocké les différentes stratégie que l'on a développé
+
+Toute stratégie hérite de la classe **StrategieInterface** :
+Cette interface définit 2 méthodes que doit utiliser chaque Stratégie.
+```python
+class StrategieInterface:
+    def initialisation(self,polyhash : Polyhash):
+        pass
+    def donne_action(self, ballon) -> int:
+        """entrée : un ballon et les données du polyhash
+           sortie : l'action à effectuer pour un tour pour un ballon"""
+        pass
+```
+
+La fonction **initialisation** est appeler au début du lancement du jeu et permet d'initialiser les données de la stratégie à 0
+
+La fonction **donne_action** quant à elle renvoie l'action à effectuer pour un ballon en particulier à un instant précis.
+Elle pourra renvoyé -1, 0 ou 1
+
+
+# Le projet 
+
+Avant de commencer le développement du projet nous avons démarrer par une partie analyse.
+Nous avons commencer par la création d'un diagramme de classe permettant de décrire l'idée général de comment sera implémenter notre projet / et organisé.
+
+![Diagramme de classe pour le projet Polyhash](DiagrammeClassePolyhash.png)
+
+
 ## descriptif général du projet ;
 
 A partir d'une carte des vents tridimensionnel, d'une liste de balise à couvrir et d'une liste de ballons à disposition, nos stratégies doivent fournir une liste d'action à donner aux ballons (se déployer, aller en haut, en bas, ou ne rien faire) afin qu'ils puissent être portés par le vent (chaque case de la carte vent contient un vecteur de déplacement deux dimensionnel) et couvrir le plus de balise pendant un maximum de temps.
