@@ -22,12 +22,17 @@ class StrategieAleatoireMutation(StrategieInterface):
         self.tour = -1
         ##### PARAMETRES MUTATION
 
-        self.newgame_p = 0 # 0.01 #Probabilité de chercher un tout nouveau max_game
-        self.nbMaxNewChemin =  0 # Nombre maximum de tout nouveau chemin mutation
-        self.nbMaxMutations = 10  # Nombre maximum de modification possible 
 
-        self.mutation_p = 0#.1 # Probabilite d'un ballon à avoir un tout nouveau chemin
-        self.mutation_chemin_p = 0.0001 # Probabilite d'un ballon à avoir des changements dans son chemin
+
+        self.newgame_p = 0#0.01 #Probabilité de chercher un tout nouveau max_game
+        self.nbMaxNewChemin =  0 #Nombre maximum de tout nouveau chemin mutation
+        self.nbMaxMutations = 3  #Nombre maximum de modification possible 
+        self.nb_max_enfant_mutation = 3 #Nombre maximum d'enfant générer par une mutation
+
+
+        self.mutation_p = 0#.1 #Probabilite d'un ballon à avoir un tout nouveau chemin
+        self.mutation_chemin_p = 0.0001 #Probabilite d'un ballon à avoir des changements dans son chemin
+
         
         self.ballonsNew = set()
         self.ballonsNewChange = dict()
@@ -92,3 +97,12 @@ class StrategieAleatoireMutation(StrategieInterface):
         if ballon.coord.z == self.polyhash.altitudes-1 :
             return [-1,0] # Renvoie soit -1 (Descendre) soit 0 (Rester)
         return [-1,0,1] # Renvoie toute les actions possibles
+
+    
+    def mutation(self,game):
+        if len(game) == len(self.max_game):
+            n = randint(1,self.nb_max_enfant_mutation)
+            for i in range(n):
+                if len(game) == len(self.max_game):
+                    pos = randint(0,len(self.max_game))
+                    self.max_game[pos] = game[pos]

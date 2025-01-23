@@ -122,51 +122,52 @@ class Strategie(StrategieInterface):
         self.polyhash = None
         self.map = []
         self.cibles = []
-        self.efficacite = 0
+        self.tour = 0
         #2 c 4b 
     def initialisation(self,polyhash : Polyhash):
         self.polyhash = polyhash
         self.map = [[1]]*polyhash.nombre_ballons
         self.cibles = [None]*polyhash.nombre_ballons
+        self.allCibles = []
         cibles = self.liste_objectifs()
-        
-        
 
 
-        lsCibles = PriorityQueue(key=lambda x:x[1])
-        print(distanceV2(polyhash.depart,cibles[2]))
+        lsCibles = PriorityQueue(key=lambda x: (x[1]))
         for goal in cibles:
-            chemin,eff = self.a_star_full(Ballon(Vecteur3(self.polyhash.depart.x,self.polyhash.depart.y,0),0),goal)
-            if eff<=0 or distanceV2(polyhash.depart,goal)>500:
+            score_chemin = self.eval_score_goal(Vecteur2(goal.x,goal.y))
+            if score_chemin<=0 :
                 continue
-            print(chemin,eff)
-            lsCibles.add(((goal.x,goal.y),eff))
+            lsCibles.add(((goal.x,goal.y),score_chemin))
+        
         cibles = []
+        max = (False,0)
         while len(lsCibles)!=0:
-            t = lsCibles.pop()[0]
+            t = lsCibles.pop()
+            if not max[0] and t[1]>10:
+                max = (False,max[1]+1)
+            else:
+                max = (True,max[1])
+            t = t[0]
             cibles.append(Vecteur2(t[0],t[1]))
         cibles.reverse()
-        print("cibles : ",(cibles))
-        print("nbBallos : ",self.polyhash.nombre_ballons)
-
-
-
-        for i in range(polyhash.nombre_ballons):
-            self.cibles[i] = cibles[(i)%len(cibles)]
-    
+        self.allCibles = cibles
+        self.max = max[1]
+        t = 0
+        for i in range(0,polyhash.nombre_ballons):
+            if i>=t*len(cibles):
+                t+= 3
+            
+            self.cibles[i] = (t,cibles[(i)%len(cibles)])
 
     
     def donne_action(self, ballon:Ballon) -> int:
         """entrée : un ballon et les données du polyhash
            sortie : l'action à effectuer pour un tour pour un ballon"""
         if ballon.id == 0:
-            c= self.cibles[ballon.id]
-            if distance(ballon.coord,Vecteur3(c.x,c.y,ballon.coord.z))<= self.polyhash.rayon_couverture:
-                # print("B0 couvre")
-                self.efficacite += 1
+            self.tour +=1
 
         if len(self.map[ballon.id])==0:
-            n = self.a_star(ballon,self.cibles[ballon.id])
+            n = self.a_star(ballon,self.cibles[ballon.id][1])
             if n == -2 : 
                 self.map[ballon.id] = [0]
             else:
@@ -178,10 +179,11 @@ class Strategie(StrategieInterface):
 
         return a
     
-    def a_star(self,ballon:Ballon,goal:Vecteur2,max_path_cost=8) :
+    def a_star(self,ballon:Ballon,goal:Vecteur2,max_path_cost=4) :
         bgoal = Vecteur3(goal.x,goal.y,0)
         pb = Problem(ballon.coord,bgoal,self.polyhash)
-        frontiere = PriorityQueue([Node(ballon.coord)],lambda x : int(distance(x.state,bgoal)) + x.path_cost)
+        frontiere = PriorityQueue([Node(ballon.coord)],lambda x :  int(distance(x.state,bgoal)) + x.path_cost)
+
         ferme =  {(ballon.coord.x,ballon.coord.y,ballon.coord.z):Node(ballon.coord)}
         last = None
         while True:
@@ -213,26 +215,37 @@ class Strategie(StrategieInterface):
                             except:
                                 print("ERREUR : ",frontiere.items,nodeToAdd)
 
-    def a_star_full(self,ballon:Ballon,goal:Vecteur2):
-        ballon = deepcopy(ballon)
-        ballon.coord.z = 0
-        chemin = [1]
-        i=0
-        tmp_couverture =0
-        while i < self.polyhash.nombre_tours:
-            chemin_temp = convertNodeToListActions(self.a_star(ballon,goal))
-            if not chemin_temp:
-                i+=1
-
-            for action in chemin_temp:
-                i+=1
-                vent =self.polyhash.carte_vent[ballon.coord.z+action][ballon.coord.y][ballon.coord.x]
-                ballon.coord = ballon.coord + Vecteur3(vent.x,vent.y,action)
-                if distanceV2(Vecteur2(ballon.coord.x,ballon.coord.y),goal) <= self.polyhash.rayon_couverture :
-                    tmp_couverture+=1
-            chemin += chemin_temp
-        return (chemin,tmp_couverture)
     
+    def eval_score_goal(self,goal:Vecteur2):
+        """
+        Renvoie le score du chemin optimal pour atteindre goal avec Astar"""
+        ballon = Ballon(Vecteur3(self.polyhash.depart.x,self.polyhash.depart.y,-1),-5)
+        score = 0
+        actions = [1]
+        for i in range(self.polyhash.nombre_tours):
+            if not ballon.estSortie :
+                if distance(ballon.coord,Vecteur3(goal.x,goal.y,ballon.coord.z))<= self.polyhash.rayon_couverture and i !=0:
+                    score += 1
+
+                if len(actions)==0:
+                    n = self.a_star(ballon,goal)
+                    if n == -2 : 
+                        actions = [0]
+                    else:
+                        actions = convertNodeToListActions(n)
+                a=0
+                if len(actions)>0:
+                    a = actions.pop(0)
+                
+                #Actualisation ballon 
+                ballon.coord += Vecteur3(0,0,a) #modification de la coordonnée altitude
+                if ballon.coord.z>=0 : #Si le ballon est lancé
+                    vent = self.polyhash.carte_vent[ballon.coord.z][ballon.coord.y][ballon.coord.x]
+                    ballon.coord += Vecteur3(vent.x,vent.y,0) #modification des coordonnées x et y
+                    ballon.coord.x %= self.polyhash.colonnes
+                    if ballon.coord.y < 0 or ballon.coord.y >= self.polyhash.lignes:
+                        ballon.estSortie = True
+        return score
 
     def liste_objectifs(self):
         """
@@ -255,7 +268,7 @@ class Strategie(StrategieInterface):
                 n = len(listeBalises)
                 for e in listeBalises:
                     dicBalise[e] = (n,(x,y))
-        queue = PriorityQueue(key=lambda tp : tp[0])
+        queue = PriorityQueue(key=lambda tp : distanceV2(self.polyhash.depart,Vecteur2(tp[1][0],tp[1][1]))/tp[0])
         cluster = set()
         for tuple in dicBalise.values():
             if tuple[1] not in cluster :

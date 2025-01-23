@@ -22,15 +22,18 @@ class StrategieTripleLigne(StrategieInterface):
         self.interval = 36
     def initialisation(self,polyhash : Polyhash):
         self.polyhash = polyhash
-        self.yobjectif1Afrique = 10
-        self.yobjectif2Afrique = 20
-        self.yobjectif3Afrique = 30
-        self.yobjectif1Australie = 10
-        self.yobjectif2Australie = 20
-        self.yobjectif3Australie = 30
-        self.yobjectif1Amerique = 10
-        self.yobjectif2Amerique = 20
-        self.yobjectif3Amerique = 30
+        decalageAf = 1
+        decalageAu = 0
+        decalageAm = -1
+        self.yobjectif1Afrique = 10 + decalageAf
+        self.yobjectif2Afrique = 20+ decalageAf
+        self.yobjectif3Afrique = 30+ decalageAf
+        self.yobjectif1Australie = 10+ decalageAu
+        self.yobjectif2Australie = 20+ decalageAu
+        self.yobjectif3Australie = 30+ decalageAu
+        self.yobjectif1Amerique = 10+ decalageAm
+        self.yobjectif2Amerique = 20+ decalageAm
+        self.yobjectif3Amerique = 30+ decalageAm
         self.debAfrique = 120
         self.debAustralie = 220
 
@@ -52,8 +55,10 @@ class StrategieTripleLigne(StrategieInterface):
         if ballon.id not in self.ballons :
             self.ballons.append(ballon)
         self.tour += 1
-        if (ballon.id - ballon.id%3) * self.interval >= self.tour :
+        if ballon.id * self.interval >= self.tour :
             return 0
+        if (ballon.id%3 == 0):
+            self.tour -= 1
         #calcul des altitudes disponibles
         coord_ballon = ballon.coord
         altitudes_disponibles = []
@@ -100,6 +105,3 @@ class StrategieTripleLigne(StrategieInterface):
                     dist_min = dist 
                     altitude_a_prendre = i
         return altitude_a_prendre
-
-        
-
