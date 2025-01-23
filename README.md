@@ -13,6 +13,7 @@ Ce dépôt correspond au projet informatique de troisième années de Polytech N
 A partir d'une carte des vents tridimensionnel, d'une liste de balise à couvrir et d'une liste de ballons à disposition, nos stratégies doivent fournir une liste d'action à donner aux ballons (se déployer, aller en haut, en bas, ou ne rien faire) afin qu'ils puissent être portés par le vent (chaque case de la carte vent contient un vecteur de déplacement deux dimensionnel) et couvrir le plus de balise pendant un maximum de temps.
 
 ## Assignation des taches :
+
 - **Augustin** : Gestion du groupe, travail théorique sur la résolution du problème (carte ID balises, décalage des ballons, système de clustering, stratégie aléatoire variée), trouver des idées, régler les problèmes d'optimisation. Réalisation d'une première version prototype de A star + clustering. Travail en binôme avec Roudy sur le clustering. Implémentation des stratégies ligne, double lignes et triple lignes pour la solution d a l'aide de la stratégie proche de Coralie et de la visualisation de carte de Bryan.
 
 - **Bryan** : Création de la stratégie aléatoire, aide pour la stratégie A star + clustering. Amélioration de la stratégie aléatoire en stratégie aléatoire évolutive, puis évolutive variée. Création d'une visualisation d'une carte contenant l'emplacement des balises et le déplacement des ballons sur la carte. Généralisation de la stratégie Triple Ligne en stratégie N Lignes.
@@ -36,6 +37,9 @@ Deux Objets utiles utilisés sur certaines stratégies :
 **Interval entre les ballons :** On ne déploie le ballon uniquement si son id multiplié par un interval de déploiement est inferieur au tour actuel.
 
 ## Stratégies utilisées :
+
+### - Un ballon part altitude
+Répartir les ballons en affectant à chaque ballon son altitude. ----
 
 ### - A star + clustering
 Regroupement des balises en clusters a l'aide d'une carte contenant les ID des balises dans chaque cases du rayon de couverture de celles-ci. Selection des meilleurs clusters en fonction du nombre de balises a l'interieur. Affectation des clusters dans l'ordre croissant des scores à chaque ballon. Recherche des clusters pour chaque ballon. Puis utilisation de la stratégie A star pour que ces ballons se dirigent vers leur balise associé et y restent.
@@ -101,4 +105,4 @@ Une fois qu'un chemin est sélectionné, les scores des nœuds de chaque niveau 
 
 Efficacité : Cette stratégie permet d'explorer différentes combinaisons d'actions et de trouver des chemins optimaux.
 
-Complexité : La complexité de cette stratégie dépend de la profondeur de l'arbre et du nombre de nœuds générés. Plus l'arbre est profond, plus le temps de calcul et la mémoire nécessaire augmentent. Cette approche devient inefficace pour des fichiers de taille moyenne comme c_medium en raison de la croissance exponentielle du nombre de nœuds.
+Complexité : La complexité de cette stratégie dépend de la profondeur de l'arbre (le nombre de tour) et du nombre de nœuds générés. Plus l'arbre est profond, plus le temps de calcul et la mémoire nécessaire augmentent. Cette approche devient inefficace pour des fichiers de taille moyenne comme c_medium en raison de la croissance exponentielle du nombre de nœuds.
