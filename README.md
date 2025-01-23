@@ -93,14 +93,13 @@ Complexité : Linéaire (5 secondes)
 
 -> **Solution très efficace**, il ne reste plus qu'a adapter la fonction pour faire varier les paramètres et le nombre de lignes.
 
+
 ### - Stratégie Arbre
 
-Cette stratégie consiste à créer un arbre où chaque nœud correspond à une action possible (-1 pour descendre, 0 pour rester, 1 pour monter). Chaque nœud possède un score cumulé depuis le début. La profondeur de l'arbre est déterminée par le nombre de tours.
+Cette stratégie construit un arbre où chaque nœud représente une action possible (-1, 0, 1) et cumule un score depuis la racine. La profondeur de l'arbre correspond au nombre de tours.
 
-Les nœuds feuilles sont triés en fonction de leur score, et la meilleure feuille est sélectionnée. Ensuite, le chemin des actions est construit en partant de cette feuille et en remontant l'arbre jusqu'à la racine.
+Les feuilles sont triées par score, et le chemin optimal est construit en remontant de la meilleure feuille à la racine. Les scores des nœuds sont ensuite mis à jour pour intégrer les balises couvertes.
 
-Une fois qu'un chemin est sélectionné, les scores des nœuds de chaque niveau de l'arbre sont mis à jour pour prendre en compte les balises déjà couvertes par le chemin sélectionné à un tour donné.
+Efficacité : Cette méthode trouve les chemins optimaux.
 
-Efficacité : Cette stratégie permet d'explorer différentes combinaisons d'actions et de trouver des chemins optimaux.
-
-Complexité : La complexité de cette stratégie dépend de la profondeur de l'arbre (le nombre de tour) et du nombre de nœuds générés. Plus l'arbre est profond, plus le temps de calcul et la mémoire nécessaire augmentent. Cette approche devient inefficace pour des fichiers de taille moyenne comme c_medium en raison de la croissance exponentielle du nombre de nœuds.
+Complexité : Croît exponentiellement avec la profondeur, rendant la stratégie inefficace pour des fichiers comme c_medium.
