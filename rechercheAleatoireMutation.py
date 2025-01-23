@@ -20,11 +20,11 @@ if __name__ == "__main__":
     if len(sys.argv) - 1 > 2 or len(sys.argv) - 1  == 0 :
         print("Attention : Il manque des paramètres !")
         print("""Construction de la commande : 
-                py fichier.py chemin/fichier_entree.txt chemin/fichier_sortie.txt
+                py rechercheAleatoireMutation.py chemin/fichier_entree.txt chemin/fichier_sortie.txt
                
               OU
 
-                py fichier.py chemin/fichier_sortie.txt
+                py rechercheAleatoireMutation.py chemin/fichier_sortie.txt
               """)
     else:
         if len(sys.argv) - 1 == 1 :
@@ -35,6 +35,7 @@ if __name__ == "__main__":
             try:
                 a = int(a)
                 chemin_entree = "data/"+os.listdir("data/")[a]
+                data_choix = a
                  
             except:
                 long = len(os.listdir("data/"))-1
@@ -124,5 +125,5 @@ if __name__ == "__main__":
                             print(f"Une meilleure solution a été trouvée : {jeu.score}")
 
                 except Exception as e:
-                    # print(f"Une erreur est survenue dans le cœur {1} : {str(e)}")
+                    print(f"Une erreur est survenue : {str(e)}")
                     break
