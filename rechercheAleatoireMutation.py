@@ -1,14 +1,10 @@
-import os
+import os,sys
 from DAOFichier import DAOFichier
 from Jeu import Jeu
 from Strategies.StrategieAleatoireMutation import StrategieAleatoireMutation
 from Polyhash import Polyhash
-# import simpleaudio as sa
 import pickle
 import time
-# define an object to play
-# wave_object = sa.WaveObject.from_wave_file('son2.wav')
-
 
 
 data_choix = 3
@@ -19,75 +15,114 @@ def enregistrer_solution(game):
     global data_choix
     with open('SauvegardeAleatoire/'+files[data_choix], 'wb') as f:
             pickle.dump(game, f)
+
 if __name__ == "__main__":
-    DAO = DAOFichier
-    polyhash: Polyhash = DAO.donne_polyhash("data/"+files[data_choix]+".in")
-    jeu = Jeu(polyhash)
-    #Utilisation la Stratégie Aléatoire
+    if len(sys.argv) - 1 > 2 or len(sys.argv) - 1  == 0 :
+        print("Attention : Il manque des paramètres !")
+        print("""Construction de la commande : 
+                py fichier.py chemin/fichier_entree.txt chemin/fichier_sortie.txt
+               
+              OU
 
-    file_path = 'SauvegardeAleatoire/'+files[data_choix]
-    if os.path.exists(file_path):
-        with open('SauvegardeAleatoire/'+files[data_choix], 'rb') as f:
-            max_game = pickle.load(f)
-            DAOFichier.cree_fichier(max_game[1],"PropositionSolution/StrategieAleatoire/sortie_"+files[data_choix]+".txt")
-
-        print("Jeu : ",max_game[0])
-        time.sleep(2)
+                py fichier.py chemin/fichier_sortie.txt
+              """)
     else:
-        max_game = (0,[])
-
-    enregistrer_solution(max_game)
-    strat = StrategieAleatoireMutation(max_game[1])
-    if data_choix == 0:
-        strat.newgame_p = 0
-        strat.nbMaxNewChemin =  0
-        strat.nbMaxMutations = 10 
-        strat.mutation_chemin_p = 0.0001 
-    elif data_choix == 1:
-        strat.newgame_p = 0
-        strat.nbMaxNewChemin =  0
-        strat.nbMaxMutations = 10 
-        strat.mutation_chemin_p = 0.0001 
-    elif data_choix == 2:
-        strat.newgame_p = 0
-        strat.nbMaxNewChemin =  0
-        strat.nbMaxMutations = 2
-        strat.mutation_chemin_p = 0.1 
-    elif data_choix == 3:
-        strat.newgame_p = 0
-        strat.nbMaxNewChemin =  0
-        strat.nbMaxMutations = 10 
-        strat.mutation_chemin_p = 0.0001 
-
-    import multiprocessing
-    import threading
-
-    max_game_value = multiprocessing.Value('d', max_game[0]) 
-    max_game_actions = multiprocessing.Manager().list(max_game[1])
-
-    lock = threading.Lock()
-
-    def travail(task_id):
-        global max_game_value, max_game_actions
-        while True:
+        if len(sys.argv) - 1 == 1 :
+            print("Un seul parametre à été sortie, il prend en compte le chemin de sortie")
+            for i,file_name in enumerate(os.listdir("data/")):
+                print(f"{i} - {file_name}")
+            a = input("Entrer le numéro du fichier de donnée que vous souhaitez utiliser :")
             try:
-                strat.max_game = list(max_game_actions)
-                jeu.lancement_jeu(strat)
+                a = int(a)
+                chemin_entree = "data/"+os.listdir("data/")[a]
+                 
+            except:
+                long = len(os.listdir("data/"))-1
+                print(f"Attention, la réponse attendu est un nombre entier compris entre 0 et {long}")
+            chemin_sortie = sys.argv[1]
 
-                if jeu.score > max_game_value.value:
-                    with lock:
-                        if jeu.score > max_game_value.value:
-                            max_game_value.value = jeu.score
-                            max_game_actions[:] = jeu.actions 
-                            enregistrer_solution((max_game_value.value, list(max_game_actions)))
-                            print(f"Une meilleure solution a été trouvée par le cœur {task_id} : {jeu.score}")
+        else:  
+            chemin_entree = sys.argv[1]
+            chemin_sortie = sys.argv[2]
 
-            except Exception as e:
-                print(f"Une erreur est survenue dans le cœur {task_id} : {str(e)}")
-                break
+        DAO = DAOFichier
+        # polyhash: Polyhash = DAO.donne_polyhash("data/"+files[data_choix]+".in")
+        polyhash: Polyhash = DAO.donne_polyhash(chemin_entree)
 
-    num_cores = multiprocessing.cpu_count() - 0
-    print(f"Lancement avec {num_cores} cœurs")
+        jeu = Jeu(polyhash)
+        #Utilisation la Stratégie Aléatoire
 
-    with multiprocessing.Pool(num_cores) as pool:
-        pool.map(travail, range(num_cores))
+        file_path = 'SauvegardeAleatoire/'+files[data_choix]
+        if os.path.exists(file_path):
+            with open('SauvegardeAleatoire/'+files[data_choix], 'rb') as f:
+                max_game = pickle.load(f)
+                DAOFichier.cree_fichier(max_game[1],"PropositionSolution/StrategieAleatoire/sortie_"+files[data_choix]+".txt")
+
+            print("Jeu : ",max_game[0])
+            time.sleep(2)
+        else:
+            max_game = (0,[])
+
+        enregistrer_solution(max_game)
+        maxs = [(0,[])]*5
+        maxs[0] = max_game
+
+        strats = [StrategieAleatoireMutation(maxs[i][1]) for i in range(len(maxs))]
+        while True:
+            for i,strat in enumerate(strats):
+                if data_choix == 0:
+                    strat.newgame_p = 0
+                    strat.nbMaxNewChemin =  0
+                    strat.nbMaxMutations = 10 
+                    strat.mutation_chemin_p = 0.0001 
+                elif data_choix == 1:
+                    strat.newgame_p = 0.01
+                    strat.nbMaxNewChemin =  1
+                    strat.nbMaxMutations = 1 
+                    strat.mutation_chemin_p = 0.1 
+                    strat.nb_max_enfant_mutation = 3 #Nombre maximum d'enfant générer par une mutation
+
+                elif data_choix == 2:
+                    strat.newgame_p = 0.001
+                    strat.nbMaxNewChemin =  1
+                    strat.nbMaxMutations = 3
+                    strat.mutation_chemin_p = 0.01 
+                    strat.nb_max_enfant_mutation = 2
+                elif data_choix == 3:
+                    strat.newgame_p = 0.2
+                    strat.nbMaxNewChemin =  10
+                    strat.nbMaxMutations = 10
+                    strat.mutation_chemin_p = 0.0001 
+
+                try:
+                    strat.max_game = maxs[i][1]
+                    jeu.lancement_jeu(strat)
+                    
+                    if jeu.score > maxs[i][0]:
+                        maxs[i] = (jeu.score,jeu.actions)
+                    if jeu.score > max_game[0]:
+                        max_game = (jeu.score,jeu.actions)
+                        print(max_game[0])
+                        print(ls)
+                        enregistrer_solution((jeu.score,jeu.actions))
+                        print(f"Une meilleure solution a été trouvée : {jeu.score}")
+                    if jeu.score>300_000:
+                        maxs.sort(key=lambda x:x[0])
+                        ls = [maxs[i][0] for i in range(len(maxs))]
+                        # print(ls)
+                        strats[9].mutation(maxs[i][1])
+                        jeu.lancement_jeu(strat)
+
+                        if jeu.score > maxs[i][0]:
+                            print(ls)
+                            maxs[i] = (jeu.score,jeu.actions)
+                        if jeu.score > max_game[0]:
+                            print(ls)
+                            
+                            max_game = (jeu.score,jeu.actions)
+                            enregistrer_solution((jeu.score,jeu.actions))
+                            print(f"Une meilleure solution a été trouvée : {jeu.score}")
+
+                except Exception as e:
+                    # print(f"Une erreur est survenue dans le cœur {1} : {str(e)}")
+                    break
