@@ -25,7 +25,7 @@ Il est alors possible de seulement préciser le fichier de sortie tel que :
 ```shell
 python main.py chemin/fichier_sortie.txt
 ```
-La liste des fichiers stockés dans data/ sera alors listée et il suffira alors d'entrer le numéro du fichier correspondant.
+La liste des fichiers stockés dans **data/** sera alors listée et il suffira alors d'entrer le numéro du fichier correspondant.
 
 exemple pour choisir le fichier `d_final.in` : 
 ```
@@ -78,7 +78,7 @@ Elle pourra renvoyé -1, 0 ou 1
 Avant de commencer le développement du projet nous avons démarré par une partie analyse.
 Nous avons commencé par la création d'un diagramme de classe permettant de décrire l'idée général de comment sera implémenter notre projet / et organisé.
 
-![Diagramme de classe pour le projet Polyhash](DiagrammeClassePolyhash.png)
+![Diagramme de classe pour le projet Polyhash](Img/DiagrammeClassePolyhash.png)
 
 
 ## Description général du projet 
@@ -127,7 +127,15 @@ Stratégie par force brute dans laquelle chaque ballon décide de prendre une di
 
 **Efficacité** : Assez efficace sur le long terme, peu efficace si on doit souvent changer de carte.
 
-**Complexité** : Extremement long pour trouver un bon score (270 000 sur la solution_d en quelques heures)
+**Complexité** : Extremement long pour trouver un bon score (270 000 sur la solution d en quelques heures)<br>
+
+Pour cette stratégie, il faut lancer **rechercheAleatoire.py**
+
+```shell
+py rechercheAleatoire.py chemin/fichier_sortie.txt
+py rechercheAleatoire.py chemin/fichier_entree.txt chemin/fichier_sortie.txt
+
+```
 
 ### - Stratégie Proche
 Chaque ballon est assignée à une balise qui devient son objectif, les balises sont choisis par distance : la cible du premier ballon est la balise la plus proche, celle du deuxième, la deuxième cible la plus proche. Tous les ballons ont donc des objectifs différents. A chaque tour le ballon se déplace en fonction de la distance entre lui et sa cible (il prend la plus proche).
@@ -142,7 +150,15 @@ Même principe que pour la stratégie aléatoire mais pour éviter les redondanc
 
 **Efficacité** : Efficace sur le long terme, peu efficace si on doit souvent changer de carte. (**300 000 en moins d'une minute**, 400 000 en quelques heures, sur la carte_d)
 
-Complexité : Beaucoup plus rapide que la stratégie aléatoire car on évite les redondances.
+**Complexité** : Beaucoup plus rapide que la stratégie aléatoire car on évite les redondances.
+
+Pour cette stratégie, il faut lancer **rechercheAleatoire.py**
+
+```shell
+py rechercheAleatoireMutation.py chemin/fichier_sortie.txt
+py rechercheAleatoireMutation.py chemin/fichier_entree.txt chemin/fichier_sortie.txt
+
+```
 
 ### - Stratégie Ligne
 Stratégie assez basique reprenant le principe de la stratégie proche mais en ne visant qu'une coordonnée y précise, qui prend en arguments le numéro d'une ligne ainsi qu'un interval de déploiement entre les ballons. Cette stratégie a été pensée pour la carte_d (Les ballons vont vers l'Est en permanence et les balises de la carte d sont surtout regroupées vers le Nord).
