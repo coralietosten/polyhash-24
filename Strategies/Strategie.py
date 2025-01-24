@@ -8,7 +8,6 @@ from random import randint
 from Polyhash import Polyhash
 from Ballon import Ballon
 
-import numpy as np
 from StrategieInterface import StrategieInterface
 import heapq
 from copy import deepcopy
