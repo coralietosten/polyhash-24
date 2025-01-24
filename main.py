@@ -14,7 +14,7 @@ files = ["a_example","b_small","c_medium","d_final"]
 def enregistrer_solution(game):
     global files
     global data_choix
-    with open('C:/Users/brali/Documents/PolytechDoc/ProjetAlgo/Vizualiser/polyhash-24/SauvegardeAleatoire/'+files[data_choix], 'wb') as f:
+    with open('SauvegardeAleatoire/'+files[data_choix], 'wb') as f:
             pickle.dump(game, f)
 
 if __name__ == "__main__": 
@@ -74,7 +74,6 @@ if __name__ == "__main__":
 
         #Enregistrement de la stratégie ayant fait le meilleur score : 
         DAO.cree_fichier(max_game[1],chemin_sortie)
-
 
     
     
