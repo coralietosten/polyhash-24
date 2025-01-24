@@ -5,6 +5,7 @@ from Jeu import Jeu
 from Strategies.StrategieAleatoire import StrategieAleatoire
 from Strategies.StrategieProche import StrategieProche
 from Strategies.Strategie import Strategie
+from Strategies.StrategieTripleLigne import StrategieTripleLigne
 from Polyhash import Polyhash
 import pickle
 import time
@@ -18,17 +19,20 @@ nom_fichier = ["a_example","b_small","c_medium","d_final"]
 
 if __name__ == "__main__":
 
-    scores_proche=[]
-    scores_aleatoire=[]
-    scores_a =[]
+    scores_proche = []
+    scores_aleatoire = []
+    scores_a = []
+    scores_triple = []
 
     temps_proche = []
-    temps_aleatoire =[]
-    temps_a=[]
+    temps_aleatoire = []
+    temps_a = []
+    temps_triple = []
 
     mem_proche = []
-    mem_alea =[]
-    mem_a=[]
+    mem_alea = []
+    mem_a = []
+    mem_triple = []
 
     for i in range(len(fichiers)):
         # Demarage de la surveillance mémoire
@@ -44,6 +48,7 @@ if __name__ == "__main__":
 
         # Strategie proche
         max_game_proche = (0,[])
+        gc.collect()  # Nettoyer la mémoire avant mesure
         mem_avant_proche = tracemalloc.get_tracemalloc_memory ( )
         jeu.lancement_jeu(StrategieProche())
         max_game_proche = (jeu.score,jeu.actions)
@@ -53,16 +58,9 @@ if __name__ == "__main__":
         mem_apres_proche = tracemalloc.get_tracemalloc_memory ( )
         stat_proche = mem_apres_proche - mem_avant_proche
         mem_proche.append(stat_proche)
-        print(mem_proche)
 
-        # from pympler import classtracker
-        # tr = classtracker.ClassTracker()
-        # tr.track_class(StrategieProche)
-        # tr.create_snapshot()
-        # tr.create_snapshot()
-        # tr.stats.print_summary()
-
-
+        # Strategie aléatoire
+        gc.collect() 
         mem_avant_alea = tracemalloc.get_tracemalloc_memory ( )
         file_path = 'SauvegardeAleatoire/'+nom_fichier[i]
         if os.path.exists(file_path):
@@ -75,29 +73,41 @@ if __name__ == "__main__":
         stat_alea = mem_apres_alea - mem_avant_alea
         mem_alea.append(stat_alea)
 
-        # Strategie A*
-        # mem_a =[]
-        # mem_avant_a = tracemalloc.get_tracemalloc_memory ( )
-        # max_game_a = (0,[])
-        # jeu.lancement_jeu(Strategie())
-        # max_game_a = (jeu.score,jeu.actions)
-        # scores_a.append(max_game_a[0])
-        # temps_a.append(time.time() - start)
-        # mem_apres_a = tracemalloc.get_tracemalloc_memory ( )
-        # stat_a = mem_apres_a - mem_avant_a
-        # mem_a.append(stat_a)
+        # Strategie A star
+        gc.collect()  
+        mem_avant_a = tracemalloc.get_tracemalloc_memory ( )
+        max_game_a = (0,[])
+        jeu.lancement_jeu(Strategie())
+        max_game_a = (jeu.score,jeu.actions)
+        scores_a.append(max_game_a[0])
+        temps_a.append(time.time() - start)
+        mem_apres_a = tracemalloc.get_tracemalloc_memory ( )
+        stat_a = mem_apres_a - mem_avant_a
+        mem_a.append(stat_a)
 
+        # Stratégie Triple Ligne
+        gc.collect()
+        mem_avant_triple = tracemalloc.get_tracemalloc_memory()
+        jeu.lancement_jeu(StrategieTripleLigne())
+        scores_triple.append(jeu.score)
+        temps_triple.append(time.time() - start)
+        mem_apres_triple = tracemalloc.get_tracemalloc_memory()
+        mem_triple.append(mem_apres_triple - mem_avant_triple)
 
+    
     # Combiner les données en un seul tableau
     donnees_combinees = [
-        ["Proche", "a_example", scores_proche[0], temps_proche[0], mem_proche[0]],
-        ["Proche", "b_small", scores_proche[1], temps_proche[1], mem_proche[1]],
-        ["Proche", "c_medium", scores_proche[2], temps_proche[2], mem_proche[2]],
-        ["Proche", "d_final", scores_proche[3], temps_proche[3], mem_proche[3]],
-        ["Aléatoire", "a_example", scores_aleatoire[0], temps_aleatoire[0], mem_alea[0]],
-        ["Aléatoire", "b_small", scores_aleatoire[1], temps_aleatoire[1], mem_alea[1]],
-        ["Aléatoire", "c_medium", scores_aleatoire[2], temps_aleatoire[2], mem_alea[2]],
-        ["Aléatoire", "d_final", scores_aleatoire[3], temps_aleatoire[3], mem_alea[3]]
+        ["Proche", nom_fichier[i], scores_proche[i], temps_proche[i], mem_proche[i] / (1024 * 1024)]
+        for i in range(len(fichiers))
+    ] + [
+        ["Aléatoire", nom_fichier[i], scores_aleatoire[i], temps_aleatoire[i], mem_alea[i] / (1024 * 1024)]
+        for i in range(len(fichiers))
+    ] + [
+        ["A star", nom_fichier[i], scores_a[i], temps_a[i], mem_a[i] / (1024 * 1024)]
+        for i in range(len(fichiers))
+    ] + [
+        ["Triple Ligne", nom_fichier[i], scores_triple[i], temps_triple[i], mem_triple[i] / (1024 * 1024)]
+        for i in range(len(fichiers))
     ]
 
     # Créer le tableau combiné
