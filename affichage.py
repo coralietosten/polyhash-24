@@ -3,7 +3,6 @@ import os
 from DAOFichier import DAOFichier
 from Jeu import Jeu
 from Strategies.StrategieAleatoire import StrategieAleatoire
-from Strategies.GusStrategie import GusStrategie
 from Strategies.StrategieProche import StrategieProche
 from Strategies.Strategie import Strategie
 from Polyhash import Polyhash
@@ -22,24 +21,29 @@ if __name__ == "__main__":
     scores_proche=[]
     scores_aleatoire=[]
     scores_a =[]
+
     temps_proche = []
     temps_aleatoire =[]
     temps_a=[]
+
+    mem_proche = []
+    mem_alea =[]
+    mem_a=[]
+
     for i in range(len(fichiers)):
-        #demarage de la surveillance mémoire
+        # Demarage de la surveillance mémoire
         tracemalloc.start()
         gc.collect()
 
-        #demarage de la surveillance du temps
+        # Demarage de la surveillance du temps
         start = time.time()
 
         DAO = DAOFichier
         polyhash: Polyhash = DAO.donne_polyhash(fichiers[i])
         jeu = Jeu(polyhash)
 
-        #strategie proche
+        # Strategie proche
         max_game_proche = (0,[])
-        mem_proche = []
         mem_avant_proche = tracemalloc.get_tracemalloc_memory ( )
         jeu.lancement_jeu(StrategieProche())
         max_game_proche = (jeu.score,jeu.actions)
@@ -59,8 +63,6 @@ if __name__ == "__main__":
         # tr.stats.print_summary()
 
 
-        #strategie Aléatoire
-        mem_alea =[]
         mem_avant_alea = tracemalloc.get_tracemalloc_memory ( )
         file_path = 'SauvegardeAleatoire/'+nom_fichier[i]
         if os.path.exists(file_path):
@@ -73,8 +75,7 @@ if __name__ == "__main__":
         stat_alea = mem_apres_alea - mem_avant_alea
         mem_alea.append(stat_alea)
 
-        
-        #strategie A*
+        # Strategie A*
         # mem_a =[]
         # mem_avant_a = tracemalloc.get_tracemalloc_memory ( )
         # max_game_a = (0,[])
@@ -87,41 +88,26 @@ if __name__ == "__main__":
         # mem_a.append(stat_a)
 
 
-    donnees_scores = [
-        ["Proche", scores_proche[0], scores_proche[1], scores_proche[2], scores_proche[3]],
-        ["Aléatoire",  scores_aleatoire[0],  scores_aleatoire[1], scores_aleatoire[2], scores_aleatoire[3]]]
-        #["A*", scores_a[0], scores_a[1], scores_a[2], scores_a[3]]]
+    # Combiner les données en un seul tableau
+    donnees_combinees = [
+        ["Proche", "a_example", scores_proche[0], temps_proche[0], mem_proche[0]],
+        ["Proche", "b_small", scores_proche[1], temps_proche[1], mem_proche[1]],
+        ["Proche", "c_medium", scores_proche[2], temps_proche[2], mem_proche[2]],
+        ["Proche", "d_final", scores_proche[3], temps_proche[3], mem_proche[3]],
+        ["Aléatoire", "a_example", scores_aleatoire[0], temps_aleatoire[0], mem_alea[0]],
+        ["Aléatoire", "b_small", scores_aleatoire[1], temps_aleatoire[1], mem_alea[1]],
+        ["Aléatoire", "c_medium", scores_aleatoire[2], temps_aleatoire[2], mem_alea[2]],
+        ["Aléatoire", "d_final", scores_aleatoire[3], temps_aleatoire[3], mem_alea[3]]
+    ]
 
-    donnees_temps =[
-        ["Proche",temps_proche[0],temps_proche[1],temps_proche[2],temps_proche[3]],
-        ["Aléatoire",temps_aleatoire[0],temps_aleatoire[1],temps_aleatoire[2],temps_aleatoire[3]]]
-        #["A*",temps_a[0],temps_a[1],temps_a[2],temps_a[3]]]
-
-    table_scores = tabulate(
-        donnees_scores, 
-        headers=["Stratégies", "a_example", "b_small","c_medium","d_final"], 
+    # Créer le tableau combiné
+    table_combinee = tabulate(
+        donnees_combinees,
+        headers=["Stratégies", "Scénario", "Scores (points)", "Temps (s)", "Mémoire (MB)"],
         tablefmt="grid"
     )
 
-    table_temps = tabulate(
-        donnees_temps, 
-        headers=["Stratégies", "a_example", "b_small","c_medium","d_final"], 
-        tablefmt="grid"
-    )
+    # Afficher le tableau combiné
+    print(table_combinee)
 
-    print(table_scores)
-    print(table_temps)
-    print(mem_proche)
-    print(mem_alea)
     tracemalloc.stop()
-    # for s in stat[:2]:
-    #     print(s)
-    # print(f'{taille_proche} octets')
-    # print(f'{taille_aleatoire} octets')
-
-
-    # print(f'Proche : Score : {scores_proche} Temps : {temps_proche}')
-    # print(f'Aléatoire : Score : {scores_aleatoire} Temps : {temps_aleatoire}')
-    # print(f'A* : Score: {scores_a} Temps : {temps_a}')
-    
-
