@@ -100,13 +100,13 @@ Le défi consiste à concevoir des stratégies pour définir les actions des bal
 
 ## Stratégies utilisées :
 
-### - Un ballon part altitude
+### - Un ballon par altitude
 Répartir les ballons en affectant à chaque ballon une altitude.
 
 ### - A star + clustering
-Regroupement des balises en clusters a l'aide d'une carte contenant les ID des balises dans chaque cases du rayon de couverture de celles-ci. Sélection des meilleures clusters en fonction du nombre de balises a l'interieur. Affectation des clusters dans l'ordre croissant des scores à chaque ballon. Recherche des clusters pour chaque ballon. Puis utilisation de la stratégie A star pour que ces ballons se dirigent vers leur balise associé et y restent.
+Regroupement des balises en clusters à l'aide d'une carte contenant les ID des balises dans chaque cases du rayon de couverture de celles-ci. Sélection des meilleures clusters en fonction du nombre de balises a l'interieur. Affectation des clusters dans l'ordre croissant des scores à chaque ballon. Recherche des clusters pour chaque ballon. Puis utilisation de la stratégie A star pour que ces ballons se dirigent vers leur balise associé et y restent.
 
-**Efficacité** : Efficace sur les premieres solutions, assez peu efficace sur la solution_d étant donné de son aspect unidirectionnel
+**Efficacité** : Efficace sur les premières solutions, assez peu efficace sur la solution_d étant donné son aspect unidirectionnel.
 
 Complexité :
 
@@ -115,17 +115,17 @@ Stratégie par force brute dans laquelle chaque ballon décide de prendre une di
 
 **Efficacité** : Assez efficace sur le long terme, peu efficace si on doit souvent changer de carte.
 
-**Complexité** : Extremement long pour trouver un bon score (270 000 sur la solution d en quelques heures)
+**Complexité** : Extremement long pour trouver un bon score (270 000 sur la solution_d en quelques heures)
 
 ### - Stratégie Proche
-Chaque ballon est assignée à une balise qui devient son objectifs, les balises sont choisis par distance : la cible du premier ballon est la balise la plus proche, celle du deuxième, la deuxième cible la plus proche. Tous les ballons ont donc des objectifs différents. A chaque tour le ballon se déplace en fonction de la distance entre lui et sa cible (il prend la plus proche). Enfin, si le ballon à atteint sa cible, elle est recalculée s'il est plus près d'une autre cible au prochain tour.
+Chaque ballon est assignée à une balise qui devient son objectif, les balises sont choisis par distance : la cible du premier ballon est la balise la plus proche, celle du deuxième, la deuxième cible la plus proche. Tous les ballons ont donc des objectifs différents. A chaque tour le ballon se déplace en fonction de la distance entre lui et sa cible (il prend la plus proche).
 
 **Efficacité** : Asszez efficace sur les petites cartes mais pas sur la carte_d.
 
 Conplexité : 
 
 ### - Stratégie Aléatoire Evolutive Variée
-Même principe que pour la stratégie aléatoire mais pour éviter les redondances entre les solutions,on prend en compte la liste des ordres donnés aux ballons et on la modifie légèrement (avec une probabilité pour chaque ordre, qu'il change). Evolutive car on ne garde que la meilleure des listes d'ordres. Variée car on commence par des générations differentes afin d'avoir moins de chance de commencer par une liste d'ordre qui n'amène a rien.
+Même principe que pour la stratégie aléatoire mais pour éviter les redondances entre les solutions, on prend en compte la liste des ordres donnés aux ballons et on la modifie légèrement (avec une probabilité pour chaque ordre, qu'il change). Evolutive car on ne garde que la meilleure des listes d'ordres. Variée car on commence par des générations differentes afin d'avoir moins de chance de commencer par une liste d'ordre qui n'amène à rien.
 
 
 **Efficacité** : Efficace sur le long terme, peu efficace si on doit souvent changer de carte. (**300 000 en moins d'une minute**, 400 000 en quelques heures, sur la carte_d)
@@ -140,9 +140,9 @@ Stratégie assez basique reprenant le principe de la stratégie proche mais en n
 **Complexité** : Linéaire (5 secondes)
 
 ### - Stratégie Double Ligne
-Même principe que la stratégie ligne mais on associe plusieurs lignes en fonction des ballons paires et impaires.
+Même principe que la stratégie ligne mais on associe plusieurs lignes en fonction des ballons pairs et impairs.
 
-**Efficacité** : Très efficace sur la carte_d (**320 000** sur la carte_d à la ligne 10 et 30 et avec un interval de 40)
+**Efficacité** : Très efficace sur la carte_d (**320 000** sur la carte_d à la ligne 10 et 30 et avec un interval de 40).
 
 **Complexité** : Linéaire (5 secondes)
 
