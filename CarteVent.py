@@ -1,7 +1,13 @@
 from typing import List
-from Vecteur2 import *
+from Vecteur2 import Vecteur2
 
 class CarteVent:
+    """
+    Classe représentant la carte des vents sous la forme d'un tableau de tableaux.
+
+    Attributs :
+    - vents (List[List[List[Vecteur2]]]): La liste des directions des vents selon les coordonnées sous la forme de Vecteur2.
+    """
     def __init__(self,listVents :  List[List[List[Vecteur2]]]):
         self.vents = listVents
     
