@@ -10,6 +10,7 @@ Ce dépôt correspond au projet informatique de troisième années de Polytech N
 
 Ce dépôt correspond au projet informatique de troisième année de 4 étudiants de Polytech Nantes.
 
+Une description d'un visualiseur du projet est accessible via [Cliquer ici](Visualiseur/Affichage.md)
 ## Consigne d'exécution du projet
 
 Commencez par clone ce dépôt :  
