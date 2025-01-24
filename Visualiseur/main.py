@@ -294,8 +294,8 @@ balloonIsPlaying = False
 zoom = 1
 offset = Vecteur2(0,0)
 ballons = []
-for i in range(polyhash.ballons):
-    ballons.append(Ballon(Vecteur3(polyhash.depart.x,polyhash.depart.y,-1)))
+for i in range(polyhash.nombre_ballons):
+    ballons.append(Ballon(Vecteur3(polyhash.depart.x,polyhash.depart.y,-1),i))
 tour = 1
 
 fps = 60
@@ -398,10 +398,10 @@ while running:
     #Anime les ballons
     if balloonIsPlaying:
         tour+=1
-        if tour >= polyhash.tours : 
+        if tour >= polyhash.nombre_tours : 
             ballons = []
-            for i in range(polyhash.ballons):
-                ballons.append(Ballon(Vecteur3(polyhash.depart.x,polyhash.depart.y,-1)))
+            for i in range(polyhash.nombre_ballons):
+                ballons.append(Ballon(Vecteur3(polyhash.depart.x,polyhash.depart.y,-1),i))
             tour = 1
         updateBalloon(polyhash,tour,ballons,max_game)
 
