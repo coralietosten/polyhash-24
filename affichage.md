@@ -1,3 +1,5 @@
+# Exemple de sortie du fichier `affichage.py`
+
 | Stratégies   | Scénario   |   Scores (points) |   Temps (s) |   Mémoire (MB) |
 |--------------|------------|------------------:|-------------|----------------|
 | Proche       | a_example  |                 5 |  0.00283766 |    0.0125122   |
