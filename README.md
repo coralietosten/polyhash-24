@@ -37,6 +37,18 @@ exemple pour choisir le fichier `d_final.in` :
 >> 3
 ```
 
+Pour lancer le fichier `affichage.py`
+
+Pour analyser la mémoire : 
+```shell
+pip install pympler
+```
+
+Pour l'affichage : 
+```shell
+pip install tabulate
+```
+
 ## Organisation du git 
 
 ### Dossier Strategies/
@@ -84,11 +96,11 @@ Rester immobiles en maintenant leur altitude actuelle.
 Le défi consiste à concevoir des stratégies pour définir les actions des ballons à chaque étape. Ces stratégies doivent exploiter les vecteurs des vents pour guider efficacement les ballons vers les balises tout en minimisant les mouvements inutiles.
 
 ## Assignation des taches :
-| Augustin                                                                                                              | Bryan                                                     | Coralie                                                                       | Roudy                                        |
-|-----------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|-------------------------------------------------------------------------------|----------------------------------------------|
-| Travail théorique sur la résolution du problème <br>  (carte ID balises, décalage des ballons, système de clustering) | Organisation du git                                       | Création de la classe Jeu permettant d'exécuter une partie avec une Stratégie | Création du DAO à partir du fichier d'entrée |
-| Premier prototype de la stratégie A star + clustering                                                                 | Stratégie Aléatoire / Mutation et A star                  | Stratégie Proche                                                              | Travail sur le clustering                    |
-| Implémentation des stratégies par ligne                                                                               | Création visualisation de la carte et des ballons/balises | Calcul de la complexité spatiale et du temps d'exécution de chaque stratégie. | Stratégie Brute Force                        |
+| Augustin                                                                                                              | Bryan                                                     | Coralie                                                                       | Roudy                                                                         |
+|-----------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|-------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| Travail théorique sur la résolution du problème <br>  (carte ID balises, décalage des ballons, système de clustering) | Organisation du git                                       | Création de la classe Jeu permettant d'exécuter une partie avec une Stratégie | Création du DAO à partir du fichier d'entrée et écriture du fichier de sortie |
+| Premier prototype de la stratégie A star + clustering                                                                 | Stratégie Aléatoire / Mutation et A star                  | Stratégie Proche                                                              | Travail sur le clustering et carte ID balises                                 |
+| Implémentation des stratégies par ligne                                                                               | Création visualisation de la carte et des ballons/balises | Calcul de la complexité spatiale et du temps d'exécution de chaque stratégie. | Stratégie un ballon par altitude et stratégie arbre (Brute Force)             |
 
 
 
