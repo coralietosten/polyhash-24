@@ -59,6 +59,8 @@ Enfin, pour lancer le fichier
 python affichage.py
 ```
 
+Vous avez un exemple de la sortie de ce fichier dans <a href="affichage.md">affichage.md</a>
+
 ## Organisation du git 
 
 ### Dossier Strategies/
