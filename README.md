@@ -8,6 +8,7 @@ Ce dépôt correspond au projet informatique de troisième années de Polytech N
 - Bryan LEVY - bryan.levy@etu.univ-nantes.fr
 - Coralie TOSTEN - coralie.tosten@etu.univ-nantes.fr
 
+Ce dépôt correspond au projet informatique de troisième année de 4 étudiants de Polytech Nantes.
 
 ## Consigne d'exécution du projet
 
