@@ -131,7 +131,6 @@ class Strategie(StrategieInterface):
         self.allCibles = []
         cibles = self.liste_objectifs()
 
-
         lsCibles = PriorityQueue(key=lambda x: (x[1]))
         for goal in cibles:
             score_chemin = self.eval_score_goal(Vecteur2(goal.x,goal.y))
@@ -139,7 +138,8 @@ class Strategie(StrategieInterface):
                 continue
             lsCibles.add(((goal.x,goal.y),score_chemin))
         
-        cibles = []
+        if len(lsCibles)!=0:
+            cibles = []
         max = (False,0)
         while len(lsCibles)!=0:
             t = lsCibles.pop()
@@ -153,10 +153,10 @@ class Strategie(StrategieInterface):
         self.allCibles = cibles
         self.max = max[1]
         t = 0
+        
         for i in range(0,polyhash.nombre_ballons):
             if i>=t*len(cibles):
-                t+= 3
-            
+                t+= 3            
             self.cibles[i] = (t,cibles[(i)%len(cibles)])
 
     
@@ -288,7 +288,8 @@ class Strategie(StrategieInterface):
         
         while i < len(ls):
             if ls[i] in dico:
-                if len(ls)> dico[ls[i]][0] : #On vérifie si la liste actuelle est plus grande que le cluster actuel de ls[i]
+                #On vérifie si la liste actuelle est plus grande que le cluster actuel de ls[i]
+                if len(ls)> dico[ls[i]][0] : 
                     i+=1
                 else:
                     ls = ls[0:i] + ls[i+1:]
