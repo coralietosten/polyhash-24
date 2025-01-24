@@ -11,6 +11,11 @@ Ce dépôt correspond au projet informatique de troisième années de Polytech N
 
 ## Consigne d'exécution du projet
 
+Commencez par clone ce dépôt :  
+```shell
+git clone https://gitlab.univ-nantes.fr/E224508F/polyhash-24.git
+```
+
 Le fichier **main.py** permet le lancement des différentes stratégies, l'affichage de leur score sur un fichier de données et l'enregistrement du meilleure score.
 
 Pour cela, il y a 2 possibilités pour lancer **main.py** : 
@@ -27,7 +32,7 @@ python main.py chemin/fichier_sortie.txt
 ```
 La liste des fichiers stockés dans **data/** sera alors listée et il suffira alors d'entrer le numéro du fichier correspondant.
 
-exemple pour choisir le fichier `d_final.in` : 
+Exemple pour choisir le fichier `d_final.in` : 
 ```
 0 - a_example.in  
 1 - b_small.in
@@ -37,16 +42,21 @@ exemple pour choisir le fichier `d_final.in` :
 >> 3
 ```
 
-Pour lancer le fichier `affichage.py`
+Pour obtenir un comparatif entre les différentes stratégies, il vous faut lancer le fichier `affichage.py`. Avant cela, installez les deux packages suivants :
 
-Pour analyser la mémoire : 
+Pour analyser la mémoire :
 ```shell
 pip install pympler
 ```
 
-Pour l'affichage : 
+Pour l'affichage des résultats sous forme de tableau :
 ```shell
 pip install tabulate
+```
+
+Enfin, pour lancer le fichier
+```shell
+python affichage.py
 ```
 
 ## Organisation du git 
